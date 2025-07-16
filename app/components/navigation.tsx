@@ -12,9 +12,9 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="flex gap-6 justify-between items-center px-6 py-4 ">
+    <nav className="flex gap-10 justify-between items-center px-10 py-4 ">
       {/* Links */}
-      <div className="flex text-white gap-6 ">
+      <div className="flex text-white gap-10 ">
         <Link href="/" className={getclass("/")}>
           Home
         </Link>

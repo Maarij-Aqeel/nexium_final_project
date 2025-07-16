@@ -16,6 +16,10 @@ module.exports = {
         input: "#2A2A2A",
         ring: "#00D9FF",
       },
+      backgroundImage: {
+        "hero-gradient":
+          "linear-gradient(135deg, #000000 0%, #1a1f2e 50%, #0C0E13 100%)",
+      },
     },
   },
   plugins: [],
