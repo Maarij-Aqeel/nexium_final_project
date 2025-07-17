@@ -48,8 +48,8 @@ export default function InterviewCards() {
 
       {/* Modal Overlay */}
       {selectedInterview && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-          <div className="relative bg-[#111827] border border-primary p-8 rounded-xl h-2/3 w-full sm:w-4/6 md:w-2/4 lg:w-2/6 max-w-2xl shadow-2xl">
+        <div className="transition-all duration-200 fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
+          <div className=" relative bg-gradient-to-r from-[#090c13] to-[#111827] border border-primary p-8 rounded-xl h-2/3 w-full sm:w-4/6 md:w-2/4 lg:w-2/6 max-w-2xl shadow-2xl ">
             {/* Form */}
             <ConfigureInterview
               interview={selectedInterview}

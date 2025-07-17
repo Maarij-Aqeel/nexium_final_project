@@ -6,6 +6,7 @@ import { passSchema } from "@/lib/passSchema";
 import { Input } from "@/components/ui/input";
 import { ToastMessage } from "./Message";
 import { useRouter } from "next/navigation";
+import { SignInwithGoogle } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 
@@ -49,10 +50,7 @@ export default function SignupComp({ onSubmit }: { onSubmit: any }) {
     }
   };
 
-  const handleGoogleSignup = () => {
-    // Handle Google signup here
-    console.log("Google signup clicked");
-  };
+
 
   return (
     <form
@@ -171,7 +169,7 @@ export default function SignupComp({ onSubmit }: { onSubmit: any }) {
         <div className="flex flex-col items-center gap-6 justify-center pt-4">
           <Button
             type="button"
-            onClick={handleGoogleSignup}
+            onClick={SignInwithGoogle}
             className="w-80 h-14 px-8 rounded-full text-white border border-secondary font-semibold text-xl bg-transparent hover:bg-secondary/5 hover:scale-105 transition-all duration-200 flex items-center justify-center"
           >
             <svg

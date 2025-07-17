@@ -133,7 +133,7 @@ export default function ConfigureInterview({
           />
 
           {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-between">
+          <div className="flex flex-col py-5 sm:flex-row gap-4 justify-between">
             <Button
               type="button"
               className="w-full sm:w-2/5 bg-slate-900/20 border border-muted text-muted hover:bg-slate-800 hover:text-white"
@@ -143,7 +143,7 @@ export default function ConfigureInterview({
             </Button>
             <Button
               type="submit"
-              className="w-full sm:w-2/5 bg-gradient-to-r from-primary to-secondary text-black hover:scale-105 transition-all duration-200"
+              className="w-full sm:w-2/5 bg-gradient-to-r from-primary/80 to-secondary/80 text-black hover:scale-105 transition-all duration-200 hover:shadow-[0_0_25px_5px_rgba(0,255,255,0.5)]"
             >
               Start Interview
             </Button>

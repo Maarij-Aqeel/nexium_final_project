@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { ToastMessage } from "./Message";
 import { passSchema } from "@/lib/passSchema";
+import { SignInwithGoogle } from "@/lib/auth";
 
 export default function LoginComp({onSubmit}:{onSubmit:any}) {
   const [userdata, setUserdata] = useState({
@@ -37,10 +38,7 @@ export default function LoginComp({onSubmit}:{onSubmit:any}) {
     }
   };
 
-  const handleGoogleLogin = () => {
-    // Handle Google login here
-    console.log("Google login clicked");
-  };
+  
 
   return (
     <form
@@ -108,7 +106,7 @@ export default function LoginComp({onSubmit}:{onSubmit:any}) {
         <div className="flex flex-col items-center gap-6 justify-center pt-4">
           <Button
             type="button"
-            onClick={handleGoogleLogin}
+            onClick={SignInwithGoogle}
             className="w-80 h-14 px-8 rounded-full text-white border border-secondary font-semibold text-xl bg-transparent hover:bg-secondary/5 hover:scale-105 transition-all duration-200 flex items-center justify-center"
           >
             <svg

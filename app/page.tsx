@@ -35,7 +35,7 @@ export default function Home() {
             <Button className="px-8 py-6 text-black font-semibold text-lg rounded-xl bg-gradient-to-r from-primary to-secondary hover:scale-105 hover:shadow-[0_0_30px_5px_rgba(0,255,255,0.5)] transition-all duration-300" onClick={()=>router.push("/interviews")}>
               Start Interviewing
             </Button>
-            <Button className="bg-transparent rounded-xl px-8 py-6 text-primary font-semibold text-lg border border-primary transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:bg-primary/10">
+            <Button className="bg-transparent rounded-xl px-8 py-6 text-primary font-semibold text-lg border border-primary transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:bg-primary/15">
               Learn More
             </Button>
           </div>

@@ -1,4 +1,3 @@
-// lib/auth.ts
 import { supabase } from "./supabase/client";
 
 export const signup = async (data: {
@@ -49,4 +48,16 @@ export const signout = async () => {
   const { error } = await supabase.auth.signOut();
 
   if (error) throw new Error(error.message);
+};
+
+export const SignInwithGoogle = async () => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${location.origin}/`,
+    },
+  });
+  if (error) {
+    throw error;
+  }
 };
