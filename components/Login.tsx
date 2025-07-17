@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { ToastMessage } from "./Message";
 import { passSchema } from "@/lib/passSchema";
 
-export default function LoginComp() {
+export default function LoginComp({onSubmit}:{onSubmit:any}) {
   const [userdata, setUserdata] = useState({
     email: "",
     password: "",
@@ -32,6 +32,7 @@ export default function LoginComp() {
       });
     } else {
       // Handle form submission here
+      onSubmit(userdata)
       console.log("Form submitted:", userdata);
     }
   };

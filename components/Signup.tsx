@@ -5,15 +5,18 @@ import { Label } from "@/components/ui/label";
 import { passSchema } from "@/lib/passSchema";
 import { Input } from "@/components/ui/input";
 import { ToastMessage } from "./Message";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 
-export default function SignupComp() {
+export default function SignupComp({ onSubmit }: { onSubmit: any }) {
+  const router=useRouter()
+
   const [userdata, setUserdata] = useState({
     name: "",
     email: "",
     password: "",
-    accountType: "Individual",
+    is_company: false,
   });
   const [allFilled, setAllFilled] = useState(false);
 
@@ -34,7 +37,7 @@ export default function SignupComp() {
       const errors = result.error.flatten().fieldErrors;
 
       const errorMsg = errors.password?.[0] || "Invalid input";
-      console.log(errorMsg)
+      console.log(errorMsg);
 
       ToastMessage({
         title: "Error",
@@ -42,7 +45,7 @@ export default function SignupComp() {
       });
     } else {
       // Handle form submission here
-      console.log("Form submitted:", userdata);
+      onSubmit(userdata);
     }
   };
 
@@ -136,9 +139,9 @@ export default function SignupComp() {
           <Label className="text-base font-medium block">Account Type</Label>
           <RadioGroup
             className="flex gap-8 justify-center"
-            value={userdata.accountType}
+            value={userdata.is_company ? "Company" : "Individual"}
             onValueChange={(value) =>
-              setUserdata({ ...userdata, accountType: value })
+              setUserdata({ ...userdata, is_company: value === "Company" })
             }
           >
             <div className="flex items-center space-x-3">
@@ -201,7 +204,7 @@ export default function SignupComp() {
             </svg>
             Signup with Google
           </Button>
-          <h1 className="text-center font-bold">or</h1>
+          <h1 className="text-center text-xl font-semibold">or</h1>
           <Button
             type="submit"
             className="w-80 h-14 px-8 rounded-full text-black font-semibold text-xl bg-gradient-to-r from-primary to-secondary hover:bg-transparent hover:scale-105 transition-all duration-200 flex items-center justify-center hover:shadow-[0_0_20px_5px_rgba(0,255,255,0.5)]"
@@ -209,6 +212,13 @@ export default function SignupComp() {
           >
             Create an Account
           </Button>
+
+          <div className="flex flex-row gap-3 text-center items-center">
+            <p>Already have an Account?</p>
+            <button className="text-xl bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text font-semibold hover:opacity-60" onClick={()=>router.push("/login")}>
+              Login
+            </button>
+          </div>
         </div>
       </div>
     </form>
