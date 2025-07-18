@@ -5,14 +5,28 @@ import Pulse from "@/components/CirclePulse";
 import { useTimer } from "react-timer-hook";
 import { TextFade } from "@/components/FadeUp";
 import Progress from "@/components/Progress";
+import { use } from "react";
+import { interviewManager } from "@/lib/interview";
 
-export default function TimerComp() {
-  const totalDuration = 5 * 60; // 5 minutes
+export default function InterviewPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  // Get the interview
+  const { id } = use(params); 
+
+  const interview = interviewManager.getById(id);
+  let totalDuration = 5 * 60;
+
+  if (interview) {
+    totalDuration = interview.duration * 60;
+  }
+
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + totalDuration);
 
   const { minutes, seconds } = useTimer({ expiryTimestamp });
-
   const timeLeft = minutes * 60 + seconds;
   const progressValue = ((totalDuration - timeLeft) / totalDuration) * 100;
 

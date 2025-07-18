@@ -27,7 +27,7 @@ export default function Profile() {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        setEmail(user.email);
+        setEmail(user.email ??"");
         setName(
           user.user_metadata?.full_name || user.user_metadata.name || "User"
         );

@@ -1,11 +1,17 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 import { TextFade } from "./FadeUp";
+import { insertInterview } from "@/lib/db/SendInterviews";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-
+import { interviewManager } from "@/lib/interview";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase/client";
 import {
   Form,
   FormControl,
@@ -23,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
+//Interview Form Schema
 const formSchema = z.object({
   duration: z.string().min(1, "Please select a duration"),
   difficulty: z.string().min(1, "Please select difficulty level"),
@@ -38,13 +45,37 @@ export default function ConfigureInterview({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+  const id = uuidv4();
 
+  // Get User
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+  }, []);
+
+  // Submit the Form
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
-      toast.success(`Interview setup complete!`, {
-        description: JSON.stringify(values, null, 2),
-      });
+      if (!user) {
+        router.push("/signup");
+        return;
+      } else {
+        interviewManager.createOrUpdate(id, {
+          title:interview.title,
+          difficulty: values.difficulty,
+          duration: Number(values.duration),
+        });
+        const sendinterview=interviewManager.getById(id)
+        sendinterview?insertInterview(sendinterview):""
+        router.push(`/interviews/${id}`);
+      }
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
