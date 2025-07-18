@@ -20,6 +20,16 @@ module.exports = {
         "hero-gradient":
           "linear-gradient(135deg, #000000 0%, #1a1f2e 50%, #0C0E13 100%)",
       },
+      animation: {
+        "custom-ping": "customPing 2.5s cubic-bezier(0, 0, 0.2, 1) infinite",
+      },
+      keyframes: {
+        customPing: {
+          "0%": { transform: "scale(1)", opacity: "0.6" },
+          "75%": { transform: "scale(2)", opacity: "0" },
+          "100%": { transform: "scale(2)", opacity: "0" },
+        },
+      },
     },
   },
   plugins: [],

@@ -43,7 +43,7 @@ export default function LoginComp({onSubmit}:{onSubmit:any}) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-lg shadow-xl border border-primary/10 bg-background/70 backdrop-blur-md rounded-lg"
+      className="w-full max-w-lg shadow-xl border border-white/20 bg-background/70 backdrop-blur-md "
     >
       {/* Header */}
       <div className="flex flex-row items-center gap-6 pb-8 px-8 pt-8">
