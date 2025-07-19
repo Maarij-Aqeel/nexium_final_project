@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Pulse from "./CirclePulse";
 import Vapi from "@vapi-ai/web";
 import { motion } from "framer-motion";
@@ -10,12 +10,14 @@ export default function VapiClient({
   Questions,
   timeleft,
   name,
+  vapitime,
   setTranscript,
 }: {
   stopCall: boolean;
   Questions: string;
   timeleft: number;
   name: string;
+  vapitime: string;
   setTranscript: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   const vapiRef = useRef<Vapi | null>(null);
@@ -27,14 +29,9 @@ export default function VapiClient({
     const vapi = new Vapi(apiKey);
     vapiRef.current = vapi;
 
-    vapi.on("call-start", () => {
-      console.log("Call started!");
-    });
 
     vapi.on("message", (message) => {
       if (message.transcript) {
-        console.log("Received transcript:", message.transcript); //
-
         setTranscript((prev) => {
           const updated = [...prev];
           if (updated.length > 0) {
@@ -52,6 +49,7 @@ export default function VapiClient({
       variableValues: {
         name: name,
         questions: Questions,
+        vapitime: vapitime,
       },
     };
 
@@ -70,18 +68,14 @@ export default function VapiClient({
 
   // Stop the call
   useEffect(() => {
-    if (timeleft <= 0 || stopCall) {
+    if (timeleft <= 3 || stopCall) {
       vapiRef.current?.say("Our time's up, goodbye!", true);
       vapiRef.current?.stop();
     }
   }, [stopCall, timeleft]);
 
   return (
-    <motion.div
-      animate={{ y: [0, -10, 0] }}
-      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-    >
+   
       <Pulse />
-    </motion.div>
   );
 }

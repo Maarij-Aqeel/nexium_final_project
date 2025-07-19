@@ -9,36 +9,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useUser } from "@/app/context/user-context";
 import { signout } from "@/lib/auth";
-import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
 export default function Profile() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const { user, profile } = useUser();
+
   useEffect(() => {
-    const getUser = async () => {
-      setLoading(true);
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        setEmail(user.email ?? "");
-        setName(
-          user.user_metadata?.full_name || user.user_metadata.name || "User"
-        );
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-      setLoading(false);
-    };
-    getUser();
-  }, []);
+    setIsLoggedIn(!!user);
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -52,15 +35,10 @@ export default function Profile() {
   };
 
   const handleProfileClick = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
     if (!user) {
       router.push("/signup");
     }
   };
-
-  if (loading) return null;
 
   if (!isLoggedIn) {
     return (
@@ -109,9 +87,11 @@ export default function Profile() {
 
       <DropdownMenuContent className="bg-background/70 backdrop-blur-md text-lg text-white p-4">
         <DropdownMenuLabel className="text-white font-bold text-lg">
-          {name}
+          {profile?.name || ""}
         </DropdownMenuLabel>
-        <DropdownMenuLabel className="text-gray-300">{email}</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-gray-300">
+          {profile?.email || ""}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-gray-300 cursor-pointer hover:bg-gray-900/70">
           Dashboard

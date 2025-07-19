@@ -3,15 +3,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { TextFade } from "./FadeUp";
-import { insertInterview } from "@/lib/db/SendInterviews";
-import { useState } from "react";
+import { insertInterview } from "@/lib/db/Handleinterview";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { interviewManager } from "@/lib/interview";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase/client";
 import {
   Form,
   FormControl,
@@ -28,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useUser } from "@/app/context/user-context";
 
 //Interview Form Schema
 const formSchema = z.object({
@@ -46,19 +44,10 @@ export default function ConfigureInterview({
     resolver: zodResolver(formSchema),
   });
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
   const id = uuidv4();
 
   // Get User
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUser();
-  }, []);
+  const { user, profile } = useUser();
 
   // Submit the Form
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -68,12 +57,12 @@ export default function ConfigureInterview({
         return;
       } else {
         interviewManager.createOrUpdate(id, {
-          title:interview.title,
+          title: interview.title,
           difficulty: values.difficulty,
           duration: Number(values.duration),
         });
-        const sendinterview=interviewManager.getById(id)
-        sendinterview?insertInterview(sendinterview):""
+        const sendinterview = interviewManager.getById(id);
+        sendinterview ? insertInterview(sendinterview, user.id) : "";
         router.push(`/interviews/${id}`);
       }
     } catch (error) {
@@ -120,9 +109,9 @@ export default function ConfigureInterview({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="z-[9999]">
+                    <SelectItem value="3">3 Minutes</SelectItem>
                     <SelectItem value="5">5 Minutes</SelectItem>
-                    <SelectItem value="10">10 Minutes</SelectItem>
-                    <SelectItem value="15">15 Minutes</SelectItem>
+                    <SelectItem value="7">7 Minutes</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

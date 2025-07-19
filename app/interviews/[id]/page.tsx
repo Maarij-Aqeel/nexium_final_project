@@ -1,32 +1,38 @@
 "use client";
 
+import TranscriptBox from "@/components/Transcript";
 import { Button } from "@/components/ui/button";
 import { useTimer } from "react-timer-hook";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { interviewManager } from "@/lib/interview";
 import { TextFade } from "@/components/FadeUp";
-import { supabase } from "@/lib/supabase/client";
+import gettime from "@/lib/time";
 import Progress from "@/components/Progress";
+import { useUser } from "@/app/context/user-context";
 import FormatQuestions from "@/lib/FormatQuestions";
 import { useRouter } from "next/navigation";
 import VapiClient from "@/components/Vapi";
 import { motion } from "framer-motion";
+import { getinterview } from "@/lib/db/Handleinterview";
+import { use } from "react";
 
-export default async function InterviewPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const id = params.id;
+export default function Page({ params }: { params: Promise<{ id: string }> }) {
+  const [vapitime, setVapiTime] = useState("");
+  const { id } = use(params);
+  const { user, profile } = useUser();
+  const [interview, setInterview] = useState<null | {
+    id: string;
+    title: string;
+    difficulty: string;
+    duration: number;
+    created_by: string;
+  }>(null);
 
   const router = useRouter();
-  const interview = interviewManager.getById(id);
 
   // Some Variables for State management
   const [stopCall, setStopCall] = useState(false);
   const [isLoading, SetIsLoading] = useState(true);
-  const [userName, SetuserName] = useState("");
   const [questions, SetQuestions] = useState("");
   const [transcript, setTranscript] = useState<string[]>([]);
 
@@ -38,36 +44,49 @@ export default async function InterviewPage({
   const timeLeft = minutes * 60 + seconds;
   const progressValue = ((totalDuration - timeLeft) / totalDuration) * 100;
 
-  // Get user id
+  //
   useEffect(() => {
-    const Getuser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        const username =
-          user.user_metadata?.full_name || user.user_metadata.name || "User";
-        SetuserName(username);
+    if (interview) {
+      setVapiTime(gettime(interview.duration * 60));
+    }
+  }, [totalDuration]);
+
+  // Validate uuid
+  const isUUID = (str: string) =>
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      str
+    );
+
+  // Fetch interview
+  useEffect(() => {
+    const fetchInterview = async () => {
+      if (!isUUID(id)) {
+        router.push("/");
+        return;
+      }
+      const data = await getinterview(id);
+      if (data) {
+        setInterview(data);
       } else {
-        router.push("/signup");
+        router.push("/");
       }
     };
-    Getuser();
-  }, []);
+
+    fetchInterview();
+  }, [id]);
 
   // Stop Call if time ends
   useEffect(() => {
     if (timeLeft <= 0) {
       setStopCall(true);
+      router.push("/");
     }
   }, [timeLeft]);
 
   // Fetch questions on load
   useEffect(() => {
     const fetchQuestions = async () => {
-      if (!interview) {
-        router.push("/");
-      }
+      if (!isUUID(id) || !interview) return;
       try {
         const res = await fetch("/api/n8n", {
           method: "POST",
@@ -85,6 +104,8 @@ export default async function InterviewPage({
       } catch (err) {
         console.error("Failed to fetch questions", err);
         toast.error("Failed to get Questions. Try again later.");
+
+        console.log(interview);
         SetIsLoading(false);
       }
     };
@@ -262,48 +283,18 @@ export default async function InterviewPage({
               Questions={questions}
               timeleft={timeLeft}
               stopCall={stopCall}
-              name={userName}
+              name={profile?.name || "user"}
               setTranscript={setTranscript}
+              vapitime={vapitime}
             />
           </motion.div>
         )}
-
-        {/* Transcript */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1 }}
-          className="mt-8 ml-8 w-full sm:w-4/6 md:w-3/5 lg:w-2/5"
-        >
-          <div className="relative p-5 rounded-xl border border-gray-700 bg-gradient-to-br from-gray-800 to-gray-900 shadow-lg backdrop-blur-md">
-            <h2 className="text-lg font-bold text-white mb-3">Transcript</h2>
-            <div className="max-h-64 overflow-y-auto space-y-2 pr-2">
-              {transcript.map((line, index) => (
-                <p
-                  key={index}
-                  className="text-sm text-gray-300 font-mono leading-snug border-l-2 border-violet-600 pl-2"
-                >
-                  {line}
-                </p>
-              ))}
-            </div>
-            {/* Listening indicator */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.7 }}
-              transition={{ duration: 1, delay: 1 }}
-              className="absolute top-3 right-5 text-white/60 text-xs"
-            >
-              <motion.span
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                Listening...
-              </motion.span>
-            </motion.div>
-          </div>
-        </motion.div>
       </motion.div>
+
+      {/* Transcript */}
+      <div className="flex justify-center">
+        <TranscriptBox transcript={transcript} />
+      </div>
 
       {/* Subtle background decoration */}
       <motion.div
