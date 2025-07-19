@@ -3,10 +3,13 @@
 import { Button } from "@/components/ui/button";
 import Pulse from "@/components/CirclePulse";
 import { useTimer } from "react-timer-hook";
+import { use } from "react";
+import { useEffect, useState } from "react";
+import { interviewManager } from "@/lib/interview";
 import { TextFade } from "@/components/FadeUp";
 import Progress from "@/components/Progress";
-import { use } from "react";
-import { interviewManager } from "@/lib/interview";
+import FormatQuestions from "@/lib/FormatQuestions";
+import VapiClient from "@/components/Vapi";
 
 export default function InterviewPage({
   params,
@@ -14,15 +17,16 @@ export default function InterviewPage({
   params: Promise<{ id: string }>;
 }) {
   // Get the interview
-  const { id } = use(params); 
+  const { id } = use(params);
 
   const interview = interviewManager.getById(id);
-  let totalDuration = 5 * 60;
+  const totalDuration = interview ? interview.duration * 60 : 5 * 60;
 
-  if (interview) {
-    totalDuration = interview.duration * 60;
-  }
+  const [stopCall, setStopCall] = useState(false);
+  const [isLoading, SetIsLoading] = useState(true);
+  const [questions, SetQuestions] = useState("");
 
+  // Timer Setup
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + totalDuration);
 
@@ -30,10 +34,49 @@ export default function InterviewPage({
   const timeLeft = minutes * 60 + seconds;
   const progressValue = ((totalDuration - timeLeft) / totalDuration) * 100;
 
+  // Fetch questions on load
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      if (!interview) return;
+
+      try {
+        const res = await fetch("/api/n8n", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(interview),
+        });
+
+        const data = await res.json();
+        if (data) {
+          const formatted = FormatQuestions(data.output);
+          SetQuestions(formatted);
+          SetIsLoading(false);
+        }
+      } catch (err) {
+        console.error("Failed to fetch questions", err);
+        SetIsLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, [interview]);
+
+  if (!interview) {
+    return (
+      <div className="p-4 text-center text-white">Loading interview...</div>
+    );
+  }
+  if (isLoading || !interview) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-white bg-hero-gradient">
+        <div className="text-lg">Preparing your interview...</div>
+      </div>
+    );
+  }
   return (
     <TextFade
       direction="up"
-      className="flex flex-col  min-h-screen px-4 py-4 overflow-hidden bg-hero-gradient"
+      className="flex flex-col min-h-screen px-4 py-4 overflow-hidden bg-hero-gradient"
     >
       {/* Header row */}
       <div className="flex mt-5 flex-row justify-between items-center mx-auto w-full md:w-2/3 px-4 md:px-8">
@@ -56,7 +99,10 @@ export default function InterviewPage({
         </div>
 
         {/* End Button */}
-        <Button className="bg-red-600 px-8 py-5 rounded-xl hover:bg-red-600/60 transition-all duration-200">
+        <Button
+          className="bg-red-600 px-8 py-5 rounded-xl hover:bg-red-600/60 transition-all duration-200"
+          onClick={() => setStopCall(true)}
+        >
           End Interview
         </Button>
       </div>
@@ -66,10 +112,14 @@ export default function InterviewPage({
         <Progress progress={progressValue} />
       </div>
 
-      {/* Pulse Animation to Left */}
+      {/* Pulse Animation  */}
       <div className="flex items-center justify-start mt-10 ml-8">
         <Pulse />
       </div>
+
+      {/* Interview Assistant */}
+
+      {!isLoading && <VapiClient Questions={questions} stopCall={stopCall} />}
     </TextFade>
   );
 }

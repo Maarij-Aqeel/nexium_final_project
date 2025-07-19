@@ -1,4 +1,3 @@
-// Interview Class
 
 interface Interview {
   id: string; // userId
