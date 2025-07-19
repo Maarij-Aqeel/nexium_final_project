@@ -3,7 +3,6 @@
 import SignupComp from "@/components/Signup";
 import { TextFade } from "@/components/FadeUp";
 import { signup } from "@/lib/auth";
-import { ToastMessage } from "@/components/Message";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -15,14 +14,12 @@ export default function Signup() {
       const user = await signup(data);
       if (user && !user.email_confirmed_at) {
         toast.info("Account Activation link sent to Email!");
+        router.push("/login");
       } else {
         router.push("/");
       }
     } catch (err: any) {
-      ToastMessage({
-        title: "Error",
-        message: err.message,
-      });
+      toast.error(err.message);
     }
   };
 

@@ -42,7 +42,9 @@ export default function SignupComp({ onSubmit }: { onSubmit: any }) {
 
       toast.error(errorMsg);
     } else {
-      // Handle form submission here
+
+      const {name,is_company}=userdata
+      localStorage.setItem("pendingProfile",JSON.stringify({name,is_company}))
       onSubmit(userdata);
     }
   };

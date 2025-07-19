@@ -1,13 +1,8 @@
 import { supabase } from "./supabase/client";
 
-export const signup = async (data: {
-  email: string;
-  password: string;
-  name: string;
-  is_company: boolean;
-}) => {
-  const { email, password, name, is_company } = data;
-  // Supabase sign up
+export const signup = async (data: { email: string; password: string }) => {
+  const { email, password } = data;
+
   const { data: authdata, error: signupError } = await supabase.auth.signUp({
     email,
     password,
@@ -15,19 +10,7 @@ export const signup = async (data: {
 
   if (signupError) throw new Error(signupError.message);
 
-  const user = authdata.user;
-
-  // Insert profile info
-  const { error: insertError } = await supabase.from("profiles").insert({
-    id: user?.id,
-    email,
-    name,
-    is_company,
-  });
-
-  if (insertError) throw new Error(insertError.message);
-
-  return user;
+  return authdata.user; // Let the user confirm via email
 };
 
 export const login = async (data: { email: string; password: string }) => {
@@ -40,12 +23,42 @@ export const login = async (data: { email: string; password: string }) => {
 
   if (error) throw new Error(error.message);
 
-  return authdata.user;
+  const user = authdata.user;
+
+  if (!user) throw new Error("Login failed");
+
+  // Get Pending Profile
+  const pending = localStorage.getItem("pendingProfile");
+  if (pending) {
+    const { name, is_company } = JSON.parse(pending);
+
+    const { data: existingProfile, error: checkError } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .single();
+
+    if (checkError && checkError.code !== "PGRST116") {
+      throw new Error(checkError.message);
+    }
+
+    if (!existingProfile) {
+      const { error: insertError } = await supabase.from("profiles").insert({
+        id: user.id,
+        name,
+        email,
+        is_company,
+      });
+
+      if (insertError) throw new Error(insertError.message);
+    }
+    localStorage.removeItem("pendingProfile");
+  }
+  return user;
 };
 
 export const signout = async () => {
   const { error } = await supabase.auth.signOut();
-
   if (error) throw new Error(error.message);
 };
 
@@ -56,7 +69,6 @@ export const SignInwithGoogle = async () => {
       redirectTo: `${location.origin}/`,
     },
   });
-  if (error) {
-    throw error;
-  }
+
+  if (error) throw error;
 };
