@@ -7,7 +7,6 @@ export const signup = async (data: {
   is_company: boolean;
 }) => {
   const { email, password, name, is_company } = data;
-
   // Supabase sign up
   const { data: authdata, error: signupError } = await supabase.auth.signUp({
     email,

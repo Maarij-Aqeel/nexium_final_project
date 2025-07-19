@@ -1,9 +1,9 @@
 "use client";
 
-import { ToastMessage } from "@/components/Message";
 import LoginComp from "@/components/Login";
 import { TextFade } from "@/components/FadeUp";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { login } from "@/lib/auth";
 
 export default function LoginUser() {
@@ -14,14 +14,12 @@ export default function LoginUser() {
       const user = await login(data);
 
       if (user && user.email_confirmed_at) {
+        toast.success("Logged in Successfully")
         //Redirect to home page
         router.push("/");
       }
     } catch (err: any) {
-      ToastMessage({
-        title: "Error",
-        message: err.message,
-      });
+      toast.error(err.message);
     }
   };
 

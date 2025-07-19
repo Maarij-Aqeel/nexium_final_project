@@ -4,11 +4,11 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { ToastMessage } from "./Message";
 import { passSchema } from "@/lib/passSchema";
 import { SignInwithGoogle } from "@/lib/auth";
+import { toast } from "sonner";
 
-export default function LoginComp({onSubmit}:{onSubmit:any}) {
+export default function LoginComp({ onSubmit }: { onSubmit: any }) {
   const [userdata, setUserdata] = useState({
     email: "",
     password: "",
@@ -26,19 +26,12 @@ export default function LoginComp({onSubmit}:{onSubmit:any}) {
     const result = passSchema.safeParse({ password: userdata.password });
 
     if (!result.success) {
-
-      ToastMessage({
-        title: "Error",
-        message: "Password is not correct",
-      });
+      toast.error("Invalid Email or Password");
     } else {
       // Handle form submission here
-      onSubmit(userdata)
-      console.log("Form submitted:", userdata);
+      onSubmit(userdata);
     }
   };
-
-  
 
   return (
     <form

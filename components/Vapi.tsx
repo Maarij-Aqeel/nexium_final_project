@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Pulse from "./CirclePulse";
 import Vapi from "@vapi-ai/web";
 import { motion } from "framer-motion";
@@ -9,10 +9,14 @@ export default function VapiClient({
   stopCall,
   Questions,
   timeleft,
+  name,
+  setTranscript,
 }: {
   stopCall: boolean;
   Questions: string;
   timeleft: number;
+  name: string;
+  setTranscript: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   const vapiRef = useRef<Vapi | null>(null);
 
@@ -24,37 +28,53 @@ export default function VapiClient({
     vapiRef.current = vapi;
 
     vapi.on("call-start", () => {
-      console.log(" Call started!");
-      console.log(" The Questions are:", Questions);
+      console.log("Call started!");
     });
 
     vapi.on("message", (message) => {
-      console.log(message);
+      if (message.transcript) {
+        console.log("Received transcript:", message.transcript); //
+
+        setTranscript((prev) => {
+          const updated = [...prev];
+          if (updated.length > 0) {
+            updated[updated.length - 1] = message.transcript;
+          } else {
+            updated.push(message.transcript);
+          }
+          return updated;
+        });
+      }
     });
 
     // AssistantOverrides with dynamic vars
     const assistantOverrides = {
       variableValues: {
-        name: "Maarij",
+        name: name,
         questions: Questions,
       },
     };
 
-    vapi.start(assistantId, assistantOverrides);
+    (async () => {
+      try {
+        await vapi.start(assistantId, assistantOverrides);
+      } catch (error) {
+        console.error("Error starting Vapi:", error);
+      }
+    })();
 
     return () => {
       vapi.stop();
     };
-  }, []);
+  }, [Questions, name]);
 
-  // Stop the call if user Clicked on Button
- useEffect(() => {
-  if (timeleft <= 0 || stopCall) {
-    vapiRef.current?.say("Our time's up, goodbye!", true);
-    vapiRef.current?.stop();
-  }
-}, [stopCall, timeleft]);
-
+  // Stop the call
+  useEffect(() => {
+    if (timeleft <= 0 || stopCall) {
+      vapiRef.current?.say("Our time's up, goodbye!", true);
+      vapiRef.current?.stop();
+    }
+  }, [stopCall, timeleft]);
 
   return (
     <motion.div

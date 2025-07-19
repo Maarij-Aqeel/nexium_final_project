@@ -4,14 +4,14 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { passSchema } from "@/lib/passSchema";
 import { Input } from "@/components/ui/input";
-import { ToastMessage } from "./Message";
 import { useRouter } from "next/navigation";
 import { SignInwithGoogle } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { useState, useEffect } from "react";
 
 export default function SignupComp({ onSubmit }: { onSubmit: any }) {
-  const router=useRouter()
+  const router = useRouter();
 
   const [userdata, setUserdata] = useState({
     name: "",
@@ -40,17 +40,12 @@ export default function SignupComp({ onSubmit }: { onSubmit: any }) {
       const errorMsg = errors.password?.[0] || "Invalid input";
       console.log(errorMsg);
 
-      ToastMessage({
-        title: "Error",
-        message: errorMsg,
-      });
+      toast.error(errorMsg);
     } else {
       // Handle form submission here
       onSubmit(userdata);
     }
   };
-
-
 
   return (
     <form
@@ -213,7 +208,10 @@ export default function SignupComp({ onSubmit }: { onSubmit: any }) {
 
           <div className="flex flex-row gap-3 text-center items-center">
             <p>Already have an Account?</p>
-            <button className="text-xl bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text font-semibold hover:opacity-60" onClick={()=>router.push("/login")}>
+            <button
+              className="text-xl bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text font-semibold hover:opacity-60"
+              onClick={() => router.push("/login")}
+            >
               Login
             </button>
           </div>

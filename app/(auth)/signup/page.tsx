@@ -1,10 +1,11 @@
-"use client"
+"use client";
 
 import SignupComp from "@/components/Signup";
 import { TextFade } from "@/components/FadeUp";
 import { signup } from "@/lib/auth";
 import { ToastMessage } from "@/components/Message";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function Signup() {
   const router = useRouter();
@@ -13,14 +14,11 @@ export default function Signup() {
     try {
       const user = await signup(data);
       if (user && !user.email_confirmed_at) {
-        ToastMessage({
-          title: "Email Verification",
-          message: "Check your email for verification",
-        });
+        toast.info("Account Activation link sent to Email!");
       } else {
         router.push("/");
       }
-    } catch (err:any) {
+    } catch (err: any) {
       ToastMessage({
         title: "Error",
         message: err.message,

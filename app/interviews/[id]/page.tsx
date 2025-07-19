@@ -2,30 +2,33 @@
 
 import { Button } from "@/components/ui/button";
 import { useTimer } from "react-timer-hook";
-import { use } from "react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { interviewManager } from "@/lib/interview";
 import { TextFade } from "@/components/FadeUp";
+import { supabase } from "@/lib/supabase/client";
 import Progress from "@/components/Progress";
 import FormatQuestions from "@/lib/FormatQuestions";
+import { useRouter } from "next/navigation";
 import VapiClient from "@/components/Vapi";
-import { motion,  } from "framer-motion";
+import { motion } from "framer-motion";
 
-export default function InterviewPage({
+export default async function InterviewPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }) {
-  // Get the interview
-  const { id } = use(params);
+  const id = params.id;
 
+  const router = useRouter();
   const interview = interviewManager.getById(id);
 
   // Some Variables for State management
   const [stopCall, setStopCall] = useState(false);
   const [isLoading, SetIsLoading] = useState(true);
+  const [userName, SetuserName] = useState("");
   const [questions, SetQuestions] = useState("");
+  const [transcript, setTranscript] = useState<string[]>([]);
 
   // Timer Setup
   const totalDuration = interview ? interview.duration * 60 : 5 * 60;
@@ -35,11 +38,36 @@ export default function InterviewPage({
   const timeLeft = minutes * 60 + seconds;
   const progressValue = ((totalDuration - timeLeft) / totalDuration) * 100;
 
+  // Get user id
+  useEffect(() => {
+    const Getuser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const username =
+          user.user_metadata?.full_name || user.user_metadata.name || "User";
+        SetuserName(username);
+      } else {
+        router.push("/signup");
+      }
+    };
+    Getuser();
+  }, []);
+
+  // Stop Call if time ends
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      setStopCall(true);
+    }
+  }, [timeLeft]);
+
   // Fetch questions on load
   useEffect(() => {
     const fetchQuestions = async () => {
-      if (!interview) return;
-
+      if (!interview) {
+        router.push("/");
+      }
       try {
         const res = await fetch("/api/n8n", {
           method: "POST",
@@ -230,23 +258,50 @@ export default function InterviewPage({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-            <VapiClient Questions={questions} timeleft={timeLeft} stopCall={stopCall} />
+            <VapiClient
+              Questions={questions}
+              timeleft={timeLeft}
+              stopCall={stopCall}
+              name={userName}
+              setTranscript={setTranscript}
+            />
           </motion.div>
         )}
 
-        {/* Subtle breathing indicator */}
+        {/* Transcript */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 0.7, x: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          className="ml-6 text-white/70 text-sm"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1 }}
+          className="mt-8 ml-8 w-full sm:w-4/6 md:w-3/5 lg:w-2/5"
         >
-          <motion.span
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            Listening...
-          </motion.span>
+          <div className="relative p-5 rounded-xl border border-gray-700 bg-gradient-to-br from-gray-800 to-gray-900 shadow-lg backdrop-blur-md">
+            <h2 className="text-lg font-bold text-white mb-3">Transcript</h2>
+            <div className="max-h-64 overflow-y-auto space-y-2 pr-2">
+              {transcript.map((line, index) => (
+                <p
+                  key={index}
+                  className="text-sm text-gray-300 font-mono leading-snug border-l-2 border-violet-600 pl-2"
+                >
+                  {line}
+                </p>
+              ))}
+            </div>
+            {/* Listening indicator */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              transition={{ duration: 1, delay: 1 }}
+              className="absolute top-3 right-5 text-white/60 text-xs"
+            >
+              <motion.span
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                Listening...
+              </motion.span>
+            </motion.div>
+          </div>
         </motion.div>
       </motion.div>
 

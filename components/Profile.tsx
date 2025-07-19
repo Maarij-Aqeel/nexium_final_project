@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signout } from "@/lib/auth";
-import { ToastMessage } from "@/components/Message";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
@@ -27,7 +27,7 @@ export default function Profile() {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        setEmail(user.email ??"");
+        setEmail(user.email ?? "");
         setName(
           user.user_metadata?.full_name || user.user_metadata.name || "User"
         );
@@ -43,17 +43,11 @@ export default function Profile() {
   const handleLogout = async () => {
     try {
       await signout();
-      ToastMessage({
-        title: "Logout",
-        message: "Logged out successfully",
-      });
+      toast.success("Logged out successfully");
       router.push("/");
       setIsLoggedIn(false);
     } catch (err: any) {
-      ToastMessage({
-        title: "Signout Error",
-        message: err.message,
-      });
+      toast.error(err.message);
     }
   };
 
