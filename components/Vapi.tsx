@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Pulse from "./CirclePulse";
 import Vapi from "@vapi-ai/web";
+import { motion } from "framer-motion";
 
 export default function VapiClient({
   stopCall,
   Questions,
+  timeleft,
 }: {
   stopCall: boolean;
   Questions: string;
+  timeleft: number;
 }) {
   const vapiRef = useRef<Vapi | null>(null);
 
@@ -19,13 +23,13 @@ export default function VapiClient({
     const vapi = new Vapi(apiKey);
     vapiRef.current = vapi;
 
-    vapi.on("error", (err) => {
-      console.error(" Vapi error:", err);
-    });
-
     vapi.on("call-start", () => {
       console.log(" Call started!");
       console.log(" The Questions are:", Questions);
+    });
+
+    vapi.on("message", (message) => {
+      console.log(message);
     });
 
     // AssistantOverrides with dynamic vars
@@ -43,13 +47,21 @@ export default function VapiClient({
     };
   }, []);
 
-  // Stop the call if stopCall is true
-  useEffect(() => {
-    if (stopCall && vapiRef.current) {
-      vapiRef.current.say("Our time's up, goodbye!", true);
-      vapiRef.current.stop();
-    }
-  }, [stopCall]);
+  // Stop the call if user Clicked on Button
+ useEffect(() => {
+  if (timeleft <= 0 || stopCall) {
+    vapiRef.current?.say("Our time's up, goodbye!", true);
+    vapiRef.current?.stop();
+  }
+}, [stopCall, timeleft]);
 
-  return <div>📞 Vapi is active</div>;
+
+  return (
+    <motion.div
+      animate={{ y: [0, -10, 0] }}
+      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <Pulse />
+    </motion.div>
+  );
 }

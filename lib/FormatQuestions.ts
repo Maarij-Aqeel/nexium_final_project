@@ -1,20 +1,13 @@
-const FormatQuestions = (obj: any) => {
-  let output = "";
-  let counter = 1;
+// Format the questions for assistant
 
-  // Question#1 is a string
-  if (typeof obj["Question#1"] === "string") {
-    output += `Question#${counter++}: ${obj["Question#1"]}\n`;
-  }
+const FormatQuestions = (obj: any): string => {
+  const questions = obj.output.questions;
 
-  // Question#2 is an array of strings
-  if (Array.isArray(obj["Question#2"])) {
-    for (const q of obj["Question#2"]) {
-      output += `Question#${counter++}: ${q}\n`;
-    }
-  }
+  const formatted = questions
+    .map((q: string, i: number) => `Question#${i + 1}: ${q}`)
+    .join(",\n");
 
-  return output;
+  return formatted;
 };
 
 export default FormatQuestions;
