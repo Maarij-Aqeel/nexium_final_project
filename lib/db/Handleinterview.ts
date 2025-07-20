@@ -46,3 +46,16 @@ export const getinterview = async (interviewId: string) => {
 
   return data;
 };
+
+export const getallinterviews = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("interviews")
+    .select("*")
+    .eq("created_by", userId);
+
+  if (error) {
+    console.log("Error getting user interviews ", error.message);
+    return null;
+  }
+  return data;
+};
