@@ -109,7 +109,7 @@ export default function ConfigureInterview({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="z-[9999]">
-                    <SelectItem value="3">3 Minutes</SelectItem>
+                    <SelectItem value="2">3 Minutes</SelectItem>
                     <SelectItem value="5">5 Minutes</SelectItem>
                     <SelectItem value="7">7 Minutes</SelectItem>
                   </SelectContent>

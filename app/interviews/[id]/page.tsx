@@ -1,117 +1,96 @@
 "use client";
 
 import TranscriptBox from "@/components/Transcript";
+import gettime from "@/lib/time";
 import { Button } from "@/components/ui/button";
 import { useTimer } from "react-timer-hook";
-import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useEffect, useRef, useState } from "react";
+import { useInterviewLogic } from "@/app/hooks/useInterviewLogic";
 import { TextFade } from "@/components/FadeUp";
-import gettime from "@/lib/time";
 import Progress from "@/components/Progress";
-import { useUser } from "@/app/context/user-context";
-import FormatQuestions from "@/lib/FormatQuestions";
-import { useRouter } from "next/navigation";
 import VapiClient from "@/components/Vapi";
+import { useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
-import { getinterview } from "@/lib/db/Handleinterview";
+import { useRouter } from "next/navigation";
 import { use } from "react";
-
+import { useUser } from "@/app/context/user-context";
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
-  const [vapitime, setVapiTime] = useState("");
   const { id } = use(params);
-  const { user, profile } = useUser();
-  const [interview, setInterview] = useState<null | {
-    id: string;
-    title: string;
-    difficulty: string;
-    duration: number;
-    created_by: string;
-  }>(null);
+  const { interview, questions, isLoading } = useInterviewLogic(id);
 
+  const [vapitime, setVapiTime] = useState("");
+  const [transcript, setTranscript] = useState<string[]>([]);
+  const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
+  const [stopCall, setStopCall] = useState(false);
+  const [timerInitialized, setTimerInitialized] = useState(false);
+  const { profile } = useUser();
   const router = useRouter();
 
-  // Some Variables for State management
-  const [stopCall, setStopCall] = useState(false);
-  const [isLoading, SetIsLoading] = useState(true);
-  const [questions, SetQuestions] = useState("");
-  const [transcript, setTranscript] = useState<string[]>([]);
+  // Use useMemo for totalDuration to prevent recalculation
+  const totalDuration = useMemo(() => {
+    return interview ? interview.duration * 60 : 5 * 60;
+  }, [interview?.duration]);
 
-  // Timer Setup
-  const totalDuration = interview ? interview.duration * 60 : 5 * 60;
-  const expiryTimestamp = new Date();
-  expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + totalDuration);
-  const { minutes, seconds } = useTimer({ expiryTimestamp });
+  // Timer Setup - only initialize with valid expiry timestamp
+  const { minutes, seconds, restart, start } = useTimer({
+    expiryTimestamp:
+      expiryTimestamp || new Date(Date.now() + totalDuration * 1000),
+    autoStart: false,
+  });
+
   const timeLeft = minutes * 60 + seconds;
   const progressValue = ((totalDuration - timeLeft) / totalDuration) * 100;
 
-  //
+  // Set Expiry Time only once when interview loads
   useEffect(() => {
-    if (interview) {
+    if (interview && !expiryTimestamp) {
+      const now = new Date();
+      now.setSeconds(now.getSeconds() + totalDuration);
+      setExpiryTimestamp(now);
+      console.log("The duration from interview is", interview.duration);
       setVapiTime(gettime(interview.duration * 60));
     }
-  }, [totalDuration]);
+  }, [interview, totalDuration, expiryTimestamp]);
 
-  // Validate uuid
-  const isUUID = (str: string) =>
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-      str
-    );
-
-  // Fetch interview
+  // Start timer when expiry timestamp is set - only once
   useEffect(() => {
-    const fetchInterview = async () => {
-      if (!isUUID(id)) {
-        router.push("/");
-        return;
-      }
-      const data = await getinterview(id);
-      if (data) {
-        setInterview(data);
-      } else {
-        router.push("/");
-      }
-    };
-
-    fetchInterview();
-  }, [id]);
+    if (expiryTimestamp && !timerInitialized && !stopCall) {
+      setTimerInitialized(true);
+      restart(expiryTimestamp);
+      start();
+    }
+  }, [expiryTimestamp, timerInitialized, stopCall]);
 
   // Stop Call if time ends
-  useEffect(() => {
-    if (timeLeft <= 0) {
+  const handleTimeUp = useCallback(() => {
+    if (!stopCall) {
       setStopCall(true);
-      router.push("/");
+      toast.info("Time's up! Redirecting .");
+      setTimeout(() => {
+        router.push("/");
+      }, 1500);
     }
-  }, [timeLeft]);
+  }, [stopCall, router]);
 
-  // Fetch questions on load
   useEffect(() => {
-    const fetchQuestions = async () => {
-      if (!isUUID(id) || !interview) return;
-      try {
-        const res = await fetch("/api/n8n", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(interview),
-        });
-
-        // Format the Questions Properly
-        const data = await res.json();
-        if (data) {
-          const formatted = FormatQuestions(data);
-          SetQuestions(formatted);
-          SetIsLoading(false);
-        }
-      } catch (err) {
-        console.error("Failed to fetch questions", err);
-        toast.error("Failed to get Questions. Try again later.");
-
-        console.log(interview);
-        SetIsLoading(false);
-      }
-    };
-
-    fetchQuestions();
-  }, [interview]);
+    if (
+      interview &&
+      expiryTimestamp &&
+      timerInitialized &&
+      timeLeft <= 0 &&
+      !stopCall
+    ) {
+      handleTimeUp();
+    }
+  }, [
+    timeLeft,
+    interview,
+    expiryTimestamp,
+    timerInitialized,
+    stopCall,
+    handleTimeUp,
+  ]);
 
   // Loading component with enhanced animation
   if (isLoading || !interview) {

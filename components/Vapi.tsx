@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import Pulse from "./CirclePulse";
 import Vapi from "@vapi-ai/web";
-import { motion } from "framer-motion";
 
 export default function VapiClient({
   stopCall,
@@ -56,6 +55,7 @@ export default function VapiClient({
     (async () => {
       try {
         await vapi.start(assistantId, assistantOverrides);
+        console.log(`Ending time is ${vapitime}`)
       } catch (error) {
         console.error("Error starting Vapi:", error);
       }
