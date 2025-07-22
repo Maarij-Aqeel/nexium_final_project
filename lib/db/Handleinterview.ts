@@ -1,4 +1,5 @@
 import { supabase } from "../supabase/client";
+import { supabaseAdmin } from "../supabase/admin";
 
 export const insertInterview = async (
   interviewData: {
@@ -58,4 +59,58 @@ export const getallinterviews = async (userId: string) => {
     return null;
   }
   return data;
+};
+
+export const insertsessions = async (sessionData: {
+  interview_id: string;
+  student_id: string;
+  scores: number;
+  status: string;
+  questions: Array<{ question: string; answer: string }>;
+  feedback: string;
+  assignedBy?: string | null;
+  startedAt: string;
+  completedAt: string;
+},useAdmin=false) => {
+  const {
+    interview_id,
+    student_id,
+    scores,
+    status,
+    questions,
+    feedback,
+    assignedBy,
+    startedAt,
+    completedAt,
+  } = sessionData;
+
+
+  const client=useAdmin?supabaseAdmin:supabase
+
+  const insertPayload: any = {
+    interview_id,
+    student_id,
+    scores,
+    status,
+    questions,
+    feedback,
+    started_at: startedAt,
+    completed_at: completedAt,
+  };
+
+  if (assignedBy) {
+    insertPayload.assigned_by = assignedBy;
+  }
+
+  const { error: insertError } = await client
+    .from("interview_sessions")
+    .insert(insertPayload);
+
+
+  if (insertError) {
+    console.error("Error inserting session data: " + insertError.message);
+    return { error: insertError.message };
+  }
+
+  return { message: "Session data insertion successful!" };
 };

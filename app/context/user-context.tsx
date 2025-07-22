@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext,  ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";
 
 // Structure of Profile

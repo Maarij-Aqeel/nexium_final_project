@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { use } from "react";
 import { useUser } from "@/app/context/user-context";
+
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { interview, questions, isLoading } = useInterviewLogic(id);
@@ -94,6 +95,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   // Loading component with enhanced animation
   if (isLoading || !interview) {
+    console.log("Interview id is", id);
     return (
       <div className="flex items-center justify-center min-h-screen text-white bg-hero-gradient">
         <motion.div
@@ -138,6 +140,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   }
 
   return (
+    console.log("Interview id is", interview.id),
+    console.log("duration is ", totalDuration),
     <TextFade
       direction="up"
       className="flex flex-col min-h-screen px-4 py-4 overflow-hidden bg-hero-gradient"
@@ -258,14 +262,17 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-            <VapiClient
+            {/* <VapiClient
               Questions={questions}
               timeleft={timeLeft}
               stopCall={stopCall}
               name={profile?.name || "user"}
               setTranscript={setTranscript}
               vapitime={vapitime}
-            />
+              interviewId={interview.id}
+              userId={profile?.id || ""}
+              assignedBy={profile?.is_company?profile.id : null}
+            /> */}
           </motion.div>
         )}
       </motion.div>

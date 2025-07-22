@@ -11,12 +11,19 @@ export default function VapiClient({
   name,
   vapitime,
   setTranscript,
+  interviewId,
+  userId,
+  assignedBy,
 }: {
   stopCall: boolean;
   Questions: string;
   timeleft: number;
   name: string;
   vapitime: string;
+  interviewId: string;
+  userId: string;
+  assignedBy: string | null;
+  // This is used to update the transcript in the parent component
   setTranscript: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   const vapiRef = useRef<Vapi | null>(null);
@@ -49,6 +56,9 @@ export default function VapiClient({
         name: name,
         questions: Questions,
         vapitime: vapitime,
+        interviewId: interviewId,
+        userId: userId,
+        assignedBy: assignedBy,
       },
     };
 

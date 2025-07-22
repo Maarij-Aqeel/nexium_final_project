@@ -26,7 +26,7 @@ export function useInterviewLogic(id: string) {
         setInterviewFound(false);
         return;
       }
-      
+
       try {
         const data = await getinterview(id);
         if (!data) {
@@ -40,7 +40,7 @@ export function useInterviewLogic(id: string) {
         setInterviewFound(false);
       }
     };
-    
+
     fetchInterview();
   }, [id]); // Only depend on id
 
@@ -48,6 +48,7 @@ export function useInterviewLogic(id: string) {
   useEffect(() => {
     if (!interviewFound && interview === null) {
       console.log("Interview not found, redirecting...");
+      toast.error("Invalid Interview Id. Redirecting...");
       router.push("/");
     }
   }, [interviewFound, interview, router]);
@@ -56,10 +57,10 @@ export function useInterviewLogic(id: string) {
   useEffect(() => {
     const fetchQuestions = async () => {
       if (!interview || !isUUID(id)) return;
-      
+
       try {
-        setIsLoading(true); // Set loading when starting to fetch questions
-        
+        setIsLoading(true);
+
         const res = await fetch("/api/n8n", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -80,7 +81,7 @@ export function useInterviewLogic(id: string) {
     };
 
     fetchQuestions();
-  }, [interview?.id, id]); // Only depend on interview.id to avoid unnecessary re-runs
+  }, [interview?.id, id]);
 
   return {
     interview,
