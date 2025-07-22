@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useCallback } from "react";
 import useSWR from "swr";
 import { stats, recentAchievements } from "@/lib/constants/mockdata";
 import { useUser } from "../context/user-context";
@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getallinterviews } from "@/lib/db/Handleinterview";
+import { getsessions } from "@/lib/db/Handleinterview";
 import {
   TableCell,
   TableHeader,
@@ -22,32 +22,47 @@ import { motion, AnimatePresence, easeInOut, easeOut } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Calendar, Award, BarChart3, ChevronRight } from "lucide-react";
 
-type Interview = {
+type InterviewSession = {
   id: string;
-  created_at: string;
-  created_by: string;
-  title: string;
-  difficulty: string;
-  duration: number;
+  interview_id: string;
+  student_id: string;
+  started_at: string;
+  completed_at: string;
+  scores: number;
+  assigned_by: string | null;
+  status: string;
+  feedback: string;
+  questions: { question: string; answer: string }[]; // parsed
+  interviews: {
+    difficulty: string;
+    duration: number;
+    title: string;
+  };
 };
 
 export default function Dashboard() {
-  const { user, profile } = useUser();
-  const [selectedTimeframe, setSelectedTimeframe] = useState("This Month");
-  const [interview_arr, setInterview] = useState<Interview[]>([]);
+  const { profile } = useUser();
+  const [interviewsessions, setAllSessions] = useState<InterviewSession[]>([]);
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  const fetcher = (id: string) => getallinterviews(id);
+  const fetchSessions = useCallback((id: string) => getsessions(id), []);
 
-  const { data: interviews, error } = useSWR(
-    user?.id ? user.id : null,
-    fetcher
-  );
+  // SWR to prevent multiple calls to DB
+  const { data: allsessions } = useSWR(profile?.id ?? null, fetchSessions, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    shouldRetryOnError: false,
+  });
 
   useEffect(() => {
-    if (interviews) {
-      setInterview(interviews); 
+    if (allsessions) {
+      const parsed = allsessions.map((session: any) => ({
+        ...session,
+        questions: JSON.parse(session.questions),
+      }));
+      setAllSessions(parsed);
     }
-  }, [interviews]);
+  }, [allsessions]);
 
   const getStatusVariant = (status: string) => {
     switch (status) {
@@ -111,7 +126,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white overflow-hidden">
+    <div className="min-h-screen bg-hero-gradient text-white overflow-hidden">
       {/* Animated Background Elements */}
       <div className="fixed inset-0 pointer-events-none">
         <motion.div
@@ -163,7 +178,6 @@ export default function Dashboard() {
                 })}
               </p>
             </div>
-            
           </div>
         </motion.div>
 
@@ -218,16 +232,9 @@ export default function Dashboard() {
                   <Clock className="w-6 h-6 text-blue-400" />
                   Recent Interviews
                 </h2>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1"
-                >
-                  View All <ChevronRight className="w-4 h-4" />
-                </motion.button>
               </div>
 
-              <div className="overflow-x-auto">
+              <div className="w-full overflow-hidden  no-scrollbar">
                 <Table>
                   <TableHeader>
                     <TableRow className="border-b border-white/10">
@@ -250,7 +257,10 @@ export default function Dashboard() {
                   </TableHeader>
                   <TableBody>
                     <AnimatePresence>
-                      {interview_arr.map((interview, index) => (
+                      {(isExpanded
+                        ? interviewsessions
+                        : interviewsessions.slice(0, 6)
+                      ).map((interview, index) => (
                         <motion.tr
                           key={interview.id}
                           initial={{ opacity: 0, x: -20 }}
@@ -261,45 +271,53 @@ export default function Dashboard() {
                         >
                           <TableCell className="font-medium text-white group-hover:text-blue-300 transition-colors">
                             <div>
-                              <p>{interview.title}</p>
+                              <p>{interview.interviews.title}</p>
                               <p className="text-xs text-gray-400">
                                 {/* {interview.date} */}
                               </p>
                             </div>
                           </TableCell>
-                          {/* <TableCell
+                          <TableCell
                             className={`font-bold text-lg ${getScoreColor(
-                              interview.score
+                              interview.scores
                             )}`}
                           >
-                            {interview.score}%
-                          </TableCell> */}
+                            {interview.scores}%
+                          </TableCell>
                           <TableCell>
                             <Badge
                               className={`px-2 py-1 text-xs rounded-full ${getDifficultyColor(
-                                interview.difficulty
+                                interview.interviews.difficulty
                               )}`}
                             >
-                              {interview.difficulty}
+                              {interview.interviews.difficulty}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-gray-300">
-                            {interview.duration} min
+                            {interview.interviews.duration} min
                           </TableCell>
                           <TableCell>
-                            {/* <Badge
+                            <Badge
                               className={`px-3 py-1 text-xs rounded-full ${getStatusVariant(
                                 interview.status
                               )}`}
                             >
                               {interview.status}
-                            </Badge> */}
+                            </Badge>
                           </TableCell>
                         </motion.tr>
                       ))}
                     </AnimatePresence>
                   </TableBody>
                 </Table>
+                <div className="flex justify-center mt-4">
+                  <button
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    className="text-sm text-blue-400 hover:underline"
+                  >
+                    {isExpanded ? "Show Less" : "Show More"}
+                  </button>
+                </div>
               </div>
             </Card>
           </motion.div>

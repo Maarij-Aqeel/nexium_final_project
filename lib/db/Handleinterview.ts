@@ -1,5 +1,5 @@
 import { supabase } from "../supabase/client";
-import { supabaseAdmin } from "../supabase/admin";
+import { getAdminSupabase } from "../supabase/admin";
 
 export const insertInterview = async (
   interviewData: {
@@ -61,17 +61,23 @@ export const getallinterviews = async (userId: string) => {
   return data;
 };
 
-export const insertsessions = async (sessionData: {
-  interview_id: string;
-  student_id: string;
-  scores: number;
-  status: string;
-  questions: Array<{ question: string; answer: string }>;
-  feedback: string;
-  assignedBy?: string | null;
-  startedAt: string;
-  completedAt: string;
-},useAdmin=false) => {
+export const insertsessions = async (
+  sessionData: {
+    interview_id: string;
+    student_id: string;
+    scores: number;
+    status: string;
+    questions: Array<{ question: string; answer: string }>;
+    feedback: {
+      strengths: string;
+      needed_improvements: string;
+    };
+    assignedBy?: string | null;
+    startedAt: string;
+    completedAt: string;
+  },
+  useAdmin = false
+) => {
   const {
     interview_id,
     student_id,
@@ -84,8 +90,7 @@ export const insertsessions = async (sessionData: {
     completedAt,
   } = sessionData;
 
-
-  const client=useAdmin?supabaseAdmin:supabase
+  const client = useAdmin ? await getAdminSupabase() : supabase;
 
   const insertPayload: any = {
     interview_id,
@@ -106,11 +111,33 @@ export const insertsessions = async (sessionData: {
     .from("interview_sessions")
     .insert(insertPayload);
 
-
   if (insertError) {
     console.error("Error inserting session data: " + insertError.message);
     return { error: insertError.message };
   }
 
   return { message: "Session data insertion successful!" };
+};
+
+export const getsessions = async (userid: string) => {
+  const { data, error } = await supabase
+    .from("interview_sessions")
+    .select(
+      `
+    *,
+    interviews (
+      title,
+      difficulty,
+      duration
+    )
+  `
+    )
+    .eq("student_id", userid);
+
+  if (error) {
+    console.log("Error getting user interviews ", error.message);
+    return null;
+  }
+  console.log("Calling DB");
+  return data;
 };

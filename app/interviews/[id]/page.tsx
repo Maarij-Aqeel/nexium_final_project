@@ -262,7 +262,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-            {/* <VapiClient
+            <VapiClient
               Questions={questions}
               timeleft={timeLeft}
               stopCall={stopCall}
@@ -272,7 +272,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               interviewId={interview.id}
               userId={profile?.id || ""}
               assignedBy={profile?.is_company?profile.id : null}
-            /> */}
+            />
           </motion.div>
         )}
       </motion.div>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import Cards from "@/components/Cards";
@@ -7,7 +7,7 @@ import UseCases from "@/components/Usecase";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const router=useRouter()
+  const router = useRouter();
 
   return (
     <FadeWrapper>
@@ -31,11 +31,14 @@ export default function Home() {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mt-10">
-            <Button className="px-8 py-7 text-black font-semibold text-lg rounded-xl bg-gradient-to-r from-primary to-secondary hover:scale-105 hover:shadow-[0_0_30px_5px_rgba(0,255,255,0.5)] transition-all duration-300" onClick={()=>router.push("/interviews")}>
+          <div className="flex flex-col sm:flex-row items-center gap-8 sm:gap-10 mt-10">
+            <Button
+              className="px-8 py-7 text-black font-semibold text-lg rounded-full bg-gradient-to-r from-primary to-secondary hover:scale-105 hover:shadow-[0_0_30px_5px_rgba(0,255,255,0.5)] transition-all duration-300"
+              onClick={() => router.push("/interviews")}
+            >
               Start Interviewing
             </Button>
-            <Button className="bg-transparent rounded-xl px-8 py-7 text-primary font-semibold text-lg border border-primary transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:bg-primary/15">
+            <Button className="bg-transparent rounded-full px-8 py-7 text-primary font-semibold text-lg border border-primary transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:bg-primary/15">
               Learn More
             </Button>
           </div>

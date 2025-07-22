@@ -15,45 +15,36 @@ Your task is to:
 
 ### Provide:
 - An overall numerical score between 0 and 100.
-- A concise and specific feedback message summarizing strengths and needed improvements.
+- A concise and specific feedback message summarizing strengths and areas needing improvement.
 
 # Output Format
-Return strictly a **JSON object** with the following keys:
+Return strictly a **valid JSON object** with the following structure:
+
 
 {
   "score": <integer between 0 and 100>,
-  "feedback": "<short but meaningful summary of what was done well and what can be improved>"
+  "feedback": {
+    "strengths": "<short, meaningful summary of what was done well>",
+    "needed_improvements": "<clear, constructive summary of what needs improvement>"
+  }
 }
 
-**Evaluate all answers together and return one overall score and one overall feedback summary**
-**Output ONLY the JSON object** — no explanations, headers, or additional text.
-
-# Input Format
-You will be provided inputs in the following format:
-
-Question: <programming question>  
-Answer: <transcribed spoken answer>
-
-# Reminder
-Expect some confusion or incomplete phrasing due to voice transcription.
-Be fair and constructive.
 `;
 
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const structedData = data.body.message.analysis.structuredData.output;
+    const structedData = data.message.analysis.structuredData.output;
     if (!structedData)
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
 
     const interviewId =
-      data.body.message.call.assistantOverrides.variableValues.interviewId;
-    const userId =
-      data.body.message.call.assistantOverrides.variableValues.userId;
+      data.message.call.assistantOverrides.variableValues.interviewId;
+    const userId = data.message.call.assistantOverrides.variableValues.userId;
     const assignedBy =
-      data.body.message.call.assistantOverrides.variableValues.assignedBy;
-    const startedAt = data.body.startedAt;
-    const completedAt = data.body.endedAt;
+      data?.message?.call.assistantOverrides?.variableValues?.assignedBy;
+    const startedAt = data?.message?.startedAt;
+    const completedAt = data?.message?.endedAt;
     const questionArray = [];
 
     if (!interviewId || !userId) {
@@ -79,28 +70,25 @@ export async function POST(req: Request) {
     const result = output.response.text();
     const parsed = JSON.parse(result);
 
-    await insertsessions({
-      interview_id: interviewId,
-      student_id: userId,
-      scores: parsed.score,
-      status: "Completed",
-      questions: questionArray,
-      feedback: parsed.feedback,
-      assignedBy: assignedBy,
-      startedAt: startedAt,
-      completedAt: completedAt,
-    },true);
+    await insertsessions(
+      {
+        interview_id: interviewId,
+        student_id: userId,
+        scores: parsed.score,
+        status: "Completed",
+        questions: questionArray,
+        feedback: parsed.feedback,
+        assignedBy: assignedBy,
+        startedAt: startedAt,
+        completedAt: completedAt,
+      },
+      true
+    );
     // insertsessions()
-    return NextResponse.json({
-      interviewId: interviewId,
-      score: parsed.score,
-      feedback: parsed.feedback,
-      student_id: userId,
-      assignedBy: assignedBy,
-    });
+    return NextResponse.json({ success: "Request completed" }, { status: 200 });
   } catch (err) {
     return NextResponse.json(
-      { error: "Failed to generate content or parse ",err },
+      { error: "Failed to generate content or parse ", err },
       { status: 500 }
     );
   }
