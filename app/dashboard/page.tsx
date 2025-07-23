@@ -1,14 +1,9 @@
 "use client";
-import { useState, useEffect, use, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import useSWR from "swr";
-import { stats, recentAchievements } from "@/lib/constants/mockdata";
+import { containerVariants, itemVariants } from "@/lib/animations";
 import { useUser } from "../context/user-context";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { getsessions } from "@/lib/db/Handleinterview";
 import {
   TableCell,
@@ -18,9 +13,11 @@ import {
   TableRow,
   TableHead,
 } from "@/components/ui/table";
-import { motion, AnimatePresence, easeInOut, easeOut } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Calendar, Award, BarChart3, ChevronRight } from "lucide-react";
+import { Clock, Calendar } from "lucide-react";
+import { DashboardStats } from "@/components/DashboardStats";
+import Achievements from "@/components/Acheivements";
 
 type InterviewSession = {
   id: string;
@@ -32,7 +29,7 @@ type InterviewSession = {
   assigned_by: string | null;
   status: string;
   feedback: string;
-  questions: { question: string; answer: string }[]; // parsed
+  questions: { question: string; answer: string }[];
   interviews: {
     difficulty: string;
     duration: number;
@@ -65,12 +62,12 @@ export default function Dashboard() {
   }, [allsessions]);
 
   const getStatusVariant = (status: string) => {
-    switch (status) {
-      case "Completed":
+    switch (status.toLowerCase()) {
+      case "completed":
         return "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
-      case "In Progress":
+      case "in progress":
         return "bg-blue-500/20 text-blue-300 border border-blue-500/30";
-      case "Scheduled":
+      case "scheduled":
         return "bg-orange-500/20 text-orange-300 border border-orange-500/30";
       default:
         return "bg-gray-500/20 text-gray-300 border border-gray-500/30";
@@ -95,34 +92,6 @@ export default function Dashboard() {
       default:
         return "text-gray-400 bg-gray-500/10 border border-gray-500/20";
     }
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: easeOut,
-      },
-    },
-  };
-
-  const cardHover = {
-    scale: 1.02,
-    transition: { duration: 0.2 },
   };
 
   return (
@@ -182,49 +151,10 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Stats Cards */}
-        <motion.div
-          variants={itemVariants}
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8"
-        >
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.title}
-              whileHover={cardHover}
-              className="group cursor-pointer"
-            >
-              <Card
-                className={`h-40 p-6 rounded-2xl shadow-xl backdrop-blur-md bg-gradient-to-tr ${stat.gradient} border border-white/10 relative overflow-hidden`}
-              >
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <CardHeader className="relative z-10">
-                  <div className="flex items-center justify-between mb-4">
-                    <stat.icon className="w-8 h-8 text-white/80" />
-                    <motion.div
-                      animate={{ rotate: [0, 5, -5, 0] }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: index * 0.2,
-                      }}
-                    >
-                      <ChevronRight className="w-5 h-5 text-white/60 group-hover:text-white transition-colors" />
-                    </motion.div>
-                  </div>
-                  <CardTitle className="text-sm text-white/80 font-medium mb-1">
-                    {stat.title}
-                  </CardTitle>
-                  <CardDescription className="text-3xl text-white font-bold mb-2">
-                    {stat.value}
-                  </CardDescription>
-                  <p className="text-xs text-white/60">{stat.change}</p>
-                </CardHeader>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
+        <DashboardStats interviewsessions={interviewsessions} />
 
+        {/* Recent Interviews Table */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-          {/* Recent Interviews Table */}
           <motion.div variants={itemVariants} className="xl:col-span-2">
             <Card className="bg-white/5 backdrop-blur-md rounded-2xl shadow-xl border border-white/10 p-6 overflow-hidden">
               <div className="flex items-center justify-between mb-6">
@@ -273,7 +203,14 @@ export default function Dashboard() {
                             <div>
                               <p>{interview.interviews.title}</p>
                               <p className="text-xs text-gray-400">
-                                {/* {interview.date} */}
+                                {new Date(
+                                  interview.completed_at
+                                ).toLocaleDateString("en-PK", {
+                                  weekday: "long",
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                })}
                               </p>
                             </div>
                           </TableCell>
@@ -323,48 +260,7 @@ export default function Dashboard() {
           </motion.div>
 
           {/* Recent Achievements */}
-          <motion.div variants={itemVariants}>
-            <Card className="bg-white/5 backdrop-blur-md rounded-2xl shadow-xl border border-white/10 p-6 h-fit">
-              <h2 className="text-xl font-semibold mb-6 flex items-center gap-3">
-                <Award className="w-5 h-5 text-yellow-400" />
-                Recent Achievements
-              </h2>
-
-              <div className="space-y-4">
-                {recentAchievements.map((achievement, index) => (
-                  <motion.div
-                    key={achievement.title}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 + index * 0.1 }}
-                    whileHover={{ scale: 1.02 }}
-                    className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer group"
-                  >
-                    <achievement.icon
-                      className={`w-5 h-5 ${achievement.color} mt-0.5 group-hover:scale-110 transition-transform`}
-                    />
-                    <div>
-                      <h3 className="font-medium text-white group-hover:text-blue-300 transition-colors">
-                        {achievement.title}
-                      </h3>
-                      <p className="text-sm text-gray-400 mt-1">
-                        {achievement.description}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2"
-              >
-                View All Achievements
-                <ChevronRight className="w-4 h-4" />
-              </motion.button>
-            </Card>
-          </motion.div>
+          <Achievements />
         </div>
       </motion.div>
     </div>

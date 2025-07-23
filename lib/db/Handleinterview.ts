@@ -48,19 +48,6 @@ export const getinterview = async (interviewId: string) => {
   return data;
 };
 
-export const getallinterviews = async (userId: string) => {
-  const { data, error } = await supabase
-    .from("interviews")
-    .select("*")
-    .eq("created_by", userId);
-
-  if (error) {
-    console.log("Error getting user interviews ", error.message);
-    return null;
-  }
-  return data;
-};
-
 export const insertsessions = async (
   sessionData: {
     interview_id: string;
@@ -124,12 +111,7 @@ export const getsessions = async (userid: string) => {
     .from("interview_sessions")
     .select(
       `
-    *,
-    interviews (
-      title,
-      difficulty,
-      duration
-    )
+      *,interviews(title,difficulty,duration)
   `
     )
     .eq("student_id", userid);
@@ -138,6 +120,18 @@ export const getsessions = async (userid: string) => {
     console.log("Error getting user interviews ", error.message);
     return null;
   }
-  console.log("Calling DB");
+  return data;
+};
+
+export const getsession = async (interviewId: string, student_id: string) => {
+  const { data, error } = await supabase
+    .from("interview_sessions")
+    .select("feedback,scores")
+    .match({ student_id: student_id, interview_id: interviewId });
+
+  if (error) {
+    console.log("Error getting Results", error.message);
+    return null
+  }
   return data;
 };
