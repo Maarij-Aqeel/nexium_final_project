@@ -104,8 +104,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   }
 
   return (
-    console.log("Interview id is", interview.id),
-    console.log("duration is ", totalDuration),
     (
       <TextFade
         direction="up"

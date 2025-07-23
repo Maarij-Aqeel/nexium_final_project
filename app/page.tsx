@@ -16,6 +16,7 @@ export default function Home() {
         <div className="absolute top-20 left-10 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute top-40 right-20 w-52 h-52 bg-green-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
         <div className="absolute top-30 left-1/4 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-2000" />
+        <div className="absolute top-1/3 right-1/4 w-32 h-52 bg-cyan-500/20 rounded-full blur-3xl animate-pulse delay-2000" />
 
         {/* Hero Section */}
         <section className="z-10 flex flex-col items-center justify-center w-full min-h-screen pt-10 px-6 bg-primary/5">

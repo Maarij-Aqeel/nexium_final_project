@@ -111,7 +111,7 @@ export const getsessions = async (userid: string) => {
     .from("interview_sessions")
     .select(
       `
-      *,interviews(title,difficulty,duration)
+      *,interviews(id,title,difficulty,duration)
   `
     )
     .eq("student_id", userid);
@@ -126,7 +126,7 @@ export const getsessions = async (userid: string) => {
 export const getsession = async (interviewId: string, student_id: string) => {
   const { data, error } = await supabase
     .from("interview_sessions")
-    .select("feedback,scores")
+    .select("*,interviews(title,difficulty,duration)")
     .match({ student_id: student_id, interview_id: interviewId });
 
   if (error) {

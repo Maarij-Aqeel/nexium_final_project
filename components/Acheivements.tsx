@@ -2,7 +2,7 @@ import { Card } from "./ui/card";
 import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
 import { Award, ChevronRight } from "lucide-react";
-import { recentAchievements } from "@/lib/constants/mockdata";
+import { recentAchievements } from "@/lib/constants/dashboard_helper";
 
 export default function Achievements() {
   return (

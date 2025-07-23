@@ -5,38 +5,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import clsx from "clsx";
-import { generateStats } from "@/lib/constants/mockdata";
+import { generateStats } from "@/lib/constants/dashboard_helper";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { dashboard_data } from "@/lib/utils";
 
 import { cardHover, itemVariants } from "@/lib/animations";
 import { ChevronRight } from "lucide-react";
+import { InterviewSession, DashboardData } from "@/types/allTypes";
 
-type InterviewSession = {
-  id: string;
-  interview_id: string;
-  student_id: string;
-  started_at: string;
-  completed_at: string;
-  scores: number;
-  assigned_by: string | null;
-  status: string;
-  feedback: string;
-  questions: { question: string; answer: string }[];
-  interviews: {
-    difficulty: string;
-    duration: number;
-    title: string;
-  };
-};
-
-type DashboardData = {
-  total_interviews: number;
-  completed: number;
-  pending: number;
-  avg_score: number;
-};
 export function DashboardStats({
   interviewsessions,
 }: {
