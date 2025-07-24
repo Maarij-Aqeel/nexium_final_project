@@ -69,7 +69,7 @@ const CircularProgress = ({
             }}
             className="drop-shadow-lg"
             style={{
-              filter: "drop-shadow(0 0 8px rgba(0, 217, 255, 0.3))"
+              filter: "drop-shadow(0 0 3px rgba(0, 217, 255, 0.3))"
             }}
           />
         </svg>

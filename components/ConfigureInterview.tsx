@@ -75,10 +75,22 @@ export default function ConfigureInterview({
     <TextFade direction="up" className="z-50 relative">
       {/* Close Button */}
       <button
-        className="absolute  top-1 right-2 transition-all duration-100 text-gray-400 hover:text-red-500 text-2xl"
+        className="absolute p-2  top-1 left-auto right-0 transition-all rounded-2xl bg-black/30 backdrop-blur-lg animate-in fade-in duration-300 text-gray-400 text-2xl"
         onClick={() => controlstate(null)}
       >
-        &times;
+        <svg
+          className="w-5 h-5 text-slate-300 hover:text-red-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
       </button>
       <h1 className="text-2xl font-bold text-white mb-5">
         Configure Interview
