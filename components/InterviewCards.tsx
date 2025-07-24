@@ -17,9 +17,9 @@ export default function InterviewCards() {
   const GetColor = (tag: string) => {
     const classname = `inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-semibold  backdrop-blur-sm shadow-lg `;
     return tag.toLowerCase() === "trending"
-      ? classname + "bg-red-500/50 text-white border border-primary/30"
+      ? classname + "bg-red-500/70 text-white border border-primary/30"
       : tag.toLowerCase() === "beginner"
-      ? classname + "bg-green-500/50 text-white border border-primary/30"
+      ? classname + "bg-green-500/20 text-white border border-primary/30"
       : classname + "bg-primary/20 text-white border border-primary/30";
   };
 
@@ -55,10 +55,9 @@ export default function InterviewCards() {
                   <img
                     src={interview.icon}
                     alt={interview.title}
-                    className="w-16 h-16 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+                    className="w-16 h-16 rounded-xl "
                   />
-                  {/* Icon glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl blur-sm opacity-0 group-hover:opacity-50 transition-opacity duration-300" />
+                  
                 </div>
 
                 {/* hover arrow with animation */}

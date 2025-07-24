@@ -97,14 +97,15 @@ export default function SingleInterview() {
   );
 
   useEffect(() => {
-    if (data) {
+    if (data && Array.isArray(data) && data.length > 0 && data[0]) {
+      console.log("Output in useeffect is ", data);
       setSessionData(data[0]);
       setQuestions(JSON.parse(data[0].questions));
     }
   }, [data]);
 
   if (error) {
-    <Error msg="Unable to get interview results" />;
+    return <Error msg="Unable to get interview results" />;
   }
 
   if (isLoading) {

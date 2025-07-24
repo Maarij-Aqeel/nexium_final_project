@@ -35,7 +35,7 @@ export default function TranscriptBox({
               {[...Array(4)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="w-1 bg-gradient-to-t from-violet-500 to-primary rounded-full"
+                  className="w-1 bg-gradient-to-t from-secondary to-primary rounded-full"
                   animate={{
                     height: [8, 24, 12, 20, 8],
                     opacity: [0.4, 1, 0.6, 0.9, 0.4],
@@ -50,7 +50,7 @@ export default function TranscriptBox({
               ))}
             </div>
             <motion.span
-              className="text-sm font-medium bg-gradient-to-r from-violet-400 to-primary bg-clip-text text-transparent"
+              className="text-sm font-medium bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent"
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -69,7 +69,7 @@ export default function TranscriptBox({
               className="group relative"
             >
               <motion.div
-                className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-violet-500 to-primary rounded-full"
+                className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-secondary to-primary rounded-full"
                 initial={{ scaleY: 0 }}
                 animate={{ scaleY: 1 }}
                 transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
@@ -113,7 +113,7 @@ export default function TranscriptBox({
               >
                 <p className="text-sm font-medium">Waiting for audio...</p>
                 <motion.div
-                  className="w-8 h-0.5 bg-gradient-to-r from-transparent via-violet-500 to-transparent mx-auto mt-3"
+                  className="w-10 h-1 bg-gradient-to-r from-transparent via-violet-500 to-transparent mx-auto mt-3"
                   animate={{ opacity: [0.3, 1, 0.3] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />

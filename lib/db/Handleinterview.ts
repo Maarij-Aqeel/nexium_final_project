@@ -129,9 +129,10 @@ export const getsession = async (interviewId: string, student_id: string) => {
     .select("*,interviews(title,difficulty,duration)")
     .match({ student_id: student_id, interview_id: interviewId });
 
-  if (error) {
-    console.log("Error getting Results", error.message);
-    return null
+  if (error) throw error;
+
+  if (!data || data.length === 0 || !data[0]) {
+    throw new Error("No session data found");
   }
   return data;
 };

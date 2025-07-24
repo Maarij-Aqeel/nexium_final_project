@@ -297,7 +297,7 @@ export default function Dashboard() {
                       <Button
                         onClick={() => setIsExpanded(!isExpanded)}
                         variant="ghost"
-                        className="text-primary hover:text-primary/90 hover:bg-primary/10 transition-all duration-200 flex items-center gap-2"
+                        className="text-primary rounded-xl  hover:text-primary/90 hover:bg-primary/10 transition-all duration-200 flex items-center gap-2"
                       >
                         {isExpanded ? (
                           <>
@@ -386,7 +386,18 @@ export default function Dashboard() {
                   </div>
                   <div className="text-center space-y-2">
                     <div className="text-3xl font-bold text-blue-400">
-                      {interviewsessions.filter((s) => s.scores >= 80).length}
+                      {
+                        interviewsessions.filter(
+                          (s) =>
+                            s.scores >
+                            Math.round(
+                              interviewsessions.reduce(
+                                (acc, curr) => acc + curr.scores,
+                                0
+                              ) / interviewsessions.length
+                            )
+                        ).length
+                      }
                     </div>
                     <div className="text-sm text-gray-400">High Scores</div>
                   </div>
