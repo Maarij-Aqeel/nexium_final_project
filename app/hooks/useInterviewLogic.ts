@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { getinterview } from "@/lib/db/Handleinterview";
 import { isUUID } from "@/lib/utils";
+import { Interview } from "@/types/allTypes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import FormatQuestions from "@/lib/FormatQuestions";
 
-export function useInterviewLogic(id: string) {
+export function useInterviewLogic({
+  id,
+  setError,
+}: {
+  id: string;
+  setError: any;
+}) {
   // All Variables/States
-  const [interview, setInterview] = useState<null | {
-    id: string;
-    title: string;
-    difficulty: string;
-    duration: number;
-    created_by: string;
-  }>(null);
+  const [interview, setInterview] = useState<null | Interview>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState("");
   const [interviewFound, setInterviewFound] = useState(true);
@@ -42,12 +43,11 @@ export function useInterviewLogic(id: string) {
     };
 
     fetchInterview();
-  }, [id]); // Only depend on id
+  }, [id]); 
 
-  // Redirect if Interview is not found - add router and interview to dependencies
+  // Redirect if Interview is not found 
   useEffect(() => {
     if (!interviewFound && interview === null) {
-      console.log("Interview not found, redirecting...");
       toast.error("Invalid Interview Id. Redirecting...");
       router.push("/");
     }
@@ -67,6 +67,9 @@ export function useInterviewLogic(id: string) {
           body: JSON.stringify(interview),
         });
 
+        if (!res.ok) {
+          throw new Error(`Fetch failed with status ${res.status}`);
+        }
         const data = await res.json();
         if (data) {
           const formatted = FormatQuestions(data);
@@ -75,6 +78,7 @@ export function useInterviewLogic(id: string) {
       } catch (err) {
         console.error("Failed to fetch questions", err);
         toast.error("Failed to get Questions. Try again later.");
+        setError(true)
       } finally {
         setIsLoading(false);
       }

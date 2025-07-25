@@ -1,4 +1,3 @@
-
 export type InterviewSession = {
   id: string;
   interview_id: string;
@@ -10,12 +9,7 @@ export type InterviewSession = {
   status: string;
   feedback: string;
   questions: { question: string; answer: string }[];
-  interviews: {
-    id:string
-    difficulty: string;
-    duration: number;
-    title: string;
-  };
+  interviews: Interview;
 };
 
 export type DashboardData = {
@@ -23,4 +17,20 @@ export type DashboardData = {
   completed: number;
   pending: number;
   avg_score: number;
+};
+
+export type Interview = {
+  id: string;
+  title: string;
+  difficulty: string;
+  duration: number;
+  created_by: string;
+};
+
+
+export type Achievement = {
+  title: string;
+  description: string;
+  icon:any
+  color:string
 };

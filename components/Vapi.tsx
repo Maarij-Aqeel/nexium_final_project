@@ -11,6 +11,7 @@ export default function VapiClient({
   name,
   vapitime,
   setTranscript,
+  setError,
   interviewId,
   userId,
   assignedBy,
@@ -18,12 +19,12 @@ export default function VapiClient({
   stopCall: boolean;
   Questions: string;
   timeleft: number;
+  setError: any;
   name: string;
   vapitime: string;
   interviewId: string;
   userId: string;
   assignedBy: string | null;
-  // This is used to update the transcript in the parent component
   setTranscript: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   const vapiRef = useRef<Vapi | null>(null);
@@ -35,8 +36,12 @@ export default function VapiClient({
     const vapi = new Vapi(apiKey);
     vapiRef.current = vapi;
 
+    const handleError = (message: any) => {
+      setError(true);
+    };
+    const handleMessage = (message: any) => {
+      console.log("📥 VAPI message received:", message); // Add this
 
-    vapi.on("message", (message) => {
       if (message.transcript) {
         setTranscript((prev) => {
           const updated = [...prev];
@@ -48,7 +53,10 @@ export default function VapiClient({
           return updated;
         });
       }
-    });
+    };
+
+    vapi.on("error", handleError);
+    vapi.on("message", handleMessage);
 
     // AssistantOverrides with dynamic vars
     const assistantOverrides = {
@@ -65,13 +73,14 @@ export default function VapiClient({
     (async () => {
       try {
         await vapi.start(assistantId, assistantOverrides);
-        console.log(`Ending time is ${vapitime}`)
       } catch (error) {
         console.error("Error starting Vapi:", error);
       }
     })();
 
     return () => {
+      vapi.off("error", handleError);
+      vapi.off("message", handleMessage);
       vapi.stop();
     };
   }, [Questions, name]);
@@ -84,8 +93,5 @@ export default function VapiClient({
     }
   }, [stopCall, timeleft]);
 
-  return (
-   
-      <Pulse />
-  );
+  return <Pulse />;
 }

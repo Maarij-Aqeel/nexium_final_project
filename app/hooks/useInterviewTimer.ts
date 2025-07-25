@@ -6,14 +6,14 @@ import { useRouter } from "next/navigation";
 interface UseInterviewTimerProps {
   duration: number; // in minutes
   interviewId: string;
-  profileId: string;
+  profile: any;
   onTimeUp?: () => void;
 }
 
 export const useInterviewTimer = ({
   duration,
   interviewId,
-  profileId,
+  profile,
   onTimeUp,
 }: UseInterviewTimerProps) => {
   const [stopCall, setStopCall] = useState(false);
@@ -49,11 +49,11 @@ export const useInterviewTimer = ({
         onTimeUp();
       } else {
         setTimeout(() => {
-          router.push(`/results?p=${interviewId}&q=${profileId}`);
+          router.push(`/results?p=${interviewId}&q=${profile?.id}`);
         }, 3000);
       }
     }
-  }, [stopCall, router, interviewId, profileId, onTimeUp]);
+  }, [stopCall, router, interviewId, profile, onTimeUp]);
 
   // Initialize timer when component mounts
   useEffect(() => {

@@ -10,10 +10,15 @@ import { useState } from "react";
 import TimerWrapper from "@/components/TimerWrapper";
 import { usePathname } from "next/navigation";
 import { useInterceptRouteChange } from "@/app/hooks/useInterceptRoute";
+import Error from "@/components/Error";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { interview, questions, isLoading } = useInterviewLogic(id);
+  const [error, setError] = useState<Error | null>(null);
+  const { interview, questions, isLoading } = useInterviewLogic({
+    id,
+    setError,
+  });
   const [pending, setPending] = useState(false);
   const { profile } = useUser();
   const pathname = usePathname();
@@ -21,6 +26,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   useInterceptRouteChange(pending);
 
+  // Prevent route Change
   useEffect(() => {
     setPending(true);
   }, [pathname]);
@@ -34,6 +40,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     );
   }
 
+  if (error) {
+    return <Error msg="Unable to generate Questions. Try again Later" />;
+  } else if (error && questions) {
+    return <Error msg="An Error occured when Staring Vapi. Try again later" />;
+  }
+
   const vapitime = gettime(interview.duration * 60);
 
   return (
@@ -43,11 +55,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     >
       <TimerWrapper
         interview={interview}
-        profileId={profile?.id || ""}
+        profile={profile}
         vapitime={vapitime}
         questions={questions}
         transcript={transcript}
         setTranscript={setTranscript}
+        setError={setError}
       />
     </TextFade>
   );

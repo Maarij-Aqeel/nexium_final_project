@@ -15,12 +15,12 @@ export default function InterviewCards() {
   const [selectedInterview, setSelectedInterview] = useState<any | null>(null);
 
   const GetColor = (tag: string) => {
-    const classname = `inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-semibold  backdrop-blur-sm shadow-lg `;
+    const classname = `inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-semibold  backdrop-blur-sm  `;
     return tag.toLowerCase() === "trending"
-      ? classname + "bg-red-500/70 text-white border border-primary/30"
+      ? classname + "text-red-400 bg-red-500/20 border border-red-500/30 shadow-sm shadow-red-500/10"
       : tag.toLowerCase() === "beginner"
-      ? classname + "bg-green-500/20 text-white border border-primary/30"
-      : classname + "bg-primary/20 text-white border border-primary/30";
+      ? classname + "bg-emerald-500/20  text-emerald-300 shadow-sm shadow-emerald-500/10  border-emerald-500/30"
+      : classname + "bg-blue-500/20 text-blue-300 border border-blue-500/30 shadow-sm shadow-blue-500/10";
   };
 
   return (

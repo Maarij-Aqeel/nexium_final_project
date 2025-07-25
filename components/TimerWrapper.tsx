@@ -6,30 +6,26 @@ import { InterviewContent } from "@/components/InterviewContent";
 
 export default function TimerWrapper({
   interview,
-  profileId,
+  profile,
+  setError,
   vapitime,
   questions,
   transcript,
   setTranscript,
 }: {
   interview: any;
-  profileId: string;
+  setError:any
+  profile: any;
   vapitime: string;
   questions: any;
   transcript: string[];
   setTranscript: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   const {
-    minutes,
-    seconds,
-    timeLeft,
-    progressValue,
-    stopCall,
-    setStopCall,
-  } = useInterviewTimer({
+    minutes,seconds,timeLeft,progressValue,stopCall,setStopCall,} = useInterviewTimer({
     duration: interview.duration,
     interviewId: interview.id,
-    profileId,
+    profile,
   });
 
   return (
@@ -48,9 +44,10 @@ export default function TimerWrapper({
         questions={questions}
         timeLeft={timeLeft}
         stopCall={stopCall}
-        profile={{ id: profileId }} // pass profile as needed
+        profile={profile} 
         vapitime={vapitime}
         interviewId={interview.id}
+        setError={setError}
       />
     </>
   );

@@ -22,7 +22,7 @@ export const useInterceptRouteChange = (shouldConfirm: boolean) => {
         href.startsWith("tel:")
       )
         return;
-
+      // Cinfirmation during route change
       if (shouldConfirm) {
         e.preventDefault();
         const confirmed = window.confirm(

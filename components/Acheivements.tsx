@@ -2,9 +2,40 @@ import { Card } from "./ui/card";
 import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
 import { Award, ChevronRight } from "lucide-react";
-import { recentAchievements } from "@/lib/constants/dashboard_helper";
+import { InterviewSession } from "@/types/allTypes";
+import { generateAchievements } from "@/lib/handleAchievements";
+import { useEffect, useState } from "react";
+import { Achievement } from "@/types/allTypes";
 
-export default function Achievements() {
+export default function Achievements({
+  interviewsessions,
+}: {
+  interviewsessions: InterviewSession[];
+}) {
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+
+  useEffect(() => {
+    if (!interviewsessions || interviewsessions.length === 0) return;
+    const data = generateAchievements(interviewsessions);
+    setAchievements(data);
+  }, [interviewsessions]);
+
+  if (achievements.length === 0) {
+    return (
+      <motion.div variants={itemVariants}>
+        <Card className="bg-white/5 backdrop-blur-md rounded-2xl shadow-xl border border-white/10 p-6 h-fit">
+          <h2 className="text-xl font-semibold mb-6 flex items-center gap-3">
+            <Award className="w-5 h-5 text-yellow-400" />
+            Recent Achievements
+          </h2>
+
+          <div className="items-center mx-auto space-y-4 text-gray-400">
+            <h2>No achievements to show</h2>
+          </div>
+        </Card>
+      </motion.div>
+    );
+  }
   return (
     <motion.div variants={itemVariants}>
       <Card className="bg-white/5 backdrop-blur-md rounded-2xl shadow-xl border border-white/10 p-6 h-fit">
@@ -14,7 +45,7 @@ export default function Achievements() {
         </h2>
 
         <div className="space-y-4">
-          {recentAchievements.map((achievement, index) => (
+          {achievements.map((achievement, index) => (
             <motion.div
               key={achievement.title}
               initial={{ opacity: 0, x: 20 }}
@@ -37,15 +68,6 @@ export default function Achievements() {
             </motion.div>
           ))}
         </div>
-
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2"
-        >
-          View All Achievements
-          <ChevronRight className="w-4 h-4" />
-        </motion.button>
       </Card>
     </motion.div>
   );

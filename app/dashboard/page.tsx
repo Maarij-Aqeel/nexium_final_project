@@ -330,7 +330,7 @@ export default function Dashboard() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
-                  <Achievements />
+                  <Achievements interviewsessions={interviewsessions}/>
                 </CardContent>
               </Card>
             </motion.div>

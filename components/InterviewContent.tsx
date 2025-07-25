@@ -12,6 +12,7 @@ interface InterviewContentProps {
   timeLeft: number;
   stopCall: boolean;
   profile: any;
+  setError:any;
   vapitime: string;
   interviewId: string;
 }
@@ -26,7 +27,10 @@ export const InterviewContent = ({
   profile,
   vapitime,
   interviewId,
+  setError
 }: InterviewContentProps) => {
+
+  console.log(`name is ${profile?.name} time is ${vapitime} `)
   return (
     <>
       {/* Progress bar */}
