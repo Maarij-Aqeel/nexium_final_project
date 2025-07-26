@@ -33,7 +33,7 @@ export default function InterviewCards() {
         {Interviews.map((interview, index) => (
           <Card
             key={index}
-            className="group relative overflow-hidden p-0 mt-5 hover:scale-105 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 ease-out bg-gradient-to-br from-slate-900/30 via-slate-800/20 to-slate-700/30 rounded-2xl border border-slate-700/50 hover:bg-gradient-to-br hover:from-primary/5 hover:via-secondary/5 hover:to-accent/5 cursor-pointer backdrop-blur-sm"
+            className="group relative h-[300px] overflow-hidden p-0 mt-5 hover:scale-105 hover:border-primary hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 ease-out bg-gradient-to-br from-slate-900/30 via-slate-800/20 to-slate-700/30 rounded-2xl border border-primary/20 hover:bg-gradient-to-br hover:from-primary/5 hover:via-secondary/5 hover:to-accent/5 cursor-pointer backdrop-blur-sm"
             onClick={() => setSelectedInterview(interview)}
           >
             {/* Tag in top-right corner */}
@@ -74,7 +74,7 @@ export default function InterviewCards() {
                 <CardTitle className="text-xl text-left font-bold leading-tight break-words text-white group-hover:text-primary/90 transition-colors duration-300">
                   {interview.title}
                 </CardTitle>
-                <CardDescription className="text-base text-left text-slate-300 group-hover:text-slate-200 transition-colors duration-300 leading-relaxed">
+                <CardDescription className="text-base text-left text-slate-300 group-hover:text-slate-200  transition-colors duration-300 leading-relaxed">
                   {interview.description}
                 </CardDescription>
               </div>
@@ -89,7 +89,7 @@ export default function InterviewCards() {
       {/* Enhanced Modal Overlay */}
       {selectedInterview && (
         <div className="transition-all duration-200 fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
-          <div className=" relative bg-gradient-to-r from-[#090c13] to-[#111827] border border-primary p-8 rounded-xl h-2/3 w-full sm:w-4/6 md:w-2/4 lg:w-2/6 max-w-2xl shadow-2xl ">
+          <div className=" relative bg-gradient-to-r from-[#090c13] to-[#111827] border border-primary p-8 rounded-xl h-auto w-full sm:w-4/6 md:w-2/4 lg:w-2/6 max-w-2xl shadow-2xl ">
             <ConfigureInterview
               interview={selectedInterview}
               controlstate={setSelectedInterview}

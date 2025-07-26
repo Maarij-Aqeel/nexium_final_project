@@ -30,7 +30,6 @@ export const InterviewContent = ({
   setError
 }: InterviewContentProps) => {
 
-  console.log(`name is ${profile?.name} time is ${vapitime} `)
   return (
     <>
       {/* Progress bar */}
@@ -58,6 +57,7 @@ export const InterviewContent = ({
           <VapiClient
             Questions={questions}
             timeleft={timeLeft}
+            setError={setError}
             stopCall={stopCall}
             name={profile?.name || "user"}
             setTranscript={setTranscript}

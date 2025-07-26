@@ -5,6 +5,11 @@ import { InterviewSession } from "@/types/allTypes";
 import { containerVariants, itemVariants } from "@/lib/animations";
 import { useUser } from "../context/user-context";
 import {
+  getScoreColor,
+  getDifficultyColor,
+  getStatusVariant,
+} from "@/lib/utils";
+import {
   Card,
   CardContent,
   CardHeader,
@@ -32,11 +37,11 @@ import {
   ChevronDown,
   ChevronUp,
   User,
-  Activity,
 } from "lucide-react";
 import { DashboardStats } from "@/components/DashboardStats";
 import Achievements from "@/components/Acheivements";
 import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 export default function Dashboard() {
   const { profile } = useUser();
@@ -45,7 +50,11 @@ export default function Dashboard() {
   const router = useRouter();
 
   const handleInterviewClick = (interview: InterviewSession) => {
-    router.push(`/results/?p=${interview.interviews.id}&q=${profile?.id}`);
+    if (interview.status.toLocaleLowerCase() != "pending") {
+      router.push(`/results/?p=${interview.interviews.id}&q=${profile?.id}`);
+    } else {
+      router.push(`interviews/${interview.interviews.id}`);
+    }
   };
 
   const fetchSessions = useCallback((id: string) => getsessions(id), []);
@@ -71,39 +80,9 @@ export default function Dashboard() {
     }
   }, [allsessions]);
 
-  const getStatusVariant = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "completed":
-        return "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm shadow-emerald-500/10";
-      case "in progress":
-        return "bg-blue-500/20 text-blue-300 border border-blue-500/30 shadow-sm shadow-blue-500/10";
-      case "scheduled":
-        return "bg-orange-500/20 text-orange-300 border border-orange-500/30 shadow-sm shadow-orange-500/10";
-      default:
-        return "bg-gray-500/20 text-gray-300 border border-gray-500/30";
-    }
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 90) return "text-emerald-400";
-    if (score >= 80) return "text-blue-400";
-    if (score >= 70) return "text-yellow-400";
-    return "text-red-400";
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Professional":
-        return "text-red-400 bg-red-500/10 border border-red-500/20 shadow-sm shadow-red-500/10";
-      case "Intermediate":
-        return "text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 shadow-sm shadow-yellow-500/10";
-      case "Beginner":
-        return "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 shadow-sm shadow-emerald-500/10";
-      default:
-        return "text-gray-400 bg-gray-500/10 border border-gray-500/20";
-    }
-  };
-
+  if (error) {
+    return <Error msg="Unable to get User data." />;
+  }
   if (isLoading) {
     return <Loading msg1="Loading your Dashboard..." />;
   }
@@ -111,34 +90,6 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen p-4 sm:p-6 bg-hero-gradient">
       <div className="max-w-7xl mx-auto">
-        {/* Animated Background Elements */}
-        <div className="fixed inset-0 pointer-events-none">
-          <motion.div
-            className="absolute top-20 left-20 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div
-            className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"
-            animate={{
-              scale: [1.2, 1, 1.2],
-              opacity: [0.2, 0.4, 0.2],
-            }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        </div>
-
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -240,7 +191,7 @@ export default function Dashboard() {
                                   </p>
                                   <p className="text-xs text-gray-400">
                                     {new Date(
-                                      interview.completed_at
+                                      interview.interviews.created_at
                                     ).toLocaleDateString("en-PK", {
                                       weekday: "short",
                                       month: "short",
@@ -257,7 +208,9 @@ export default function Dashboard() {
                                       interview.scores
                                     )}`}
                                   >
-                                    {interview.scores}%
+                                    {interview.scores != null
+                                      ? `${interview.scores}%`
+                                      : "N/A"}
                                   </div>
                                 </div>
                               </TableCell>
@@ -330,7 +283,7 @@ export default function Dashboard() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
-                  <Achievements interviewsessions={interviewsessions}/>
+                  <Achievements interviewsessions={interviewsessions} />
                 </CardContent>
               </Card>
             </motion.div>
@@ -386,18 +339,7 @@ export default function Dashboard() {
                   </div>
                   <div className="text-center space-y-2">
                     <div className="text-3xl font-bold text-blue-400">
-                      {
-                        interviewsessions.filter(
-                          (s) =>
-                            s.scores >
-                            Math.round(
-                              interviewsessions.reduce(
-                                (acc, curr) => acc + curr.scores,
-                                0
-                              ) / interviewsessions.length
-                            )
-                        ).length
-                      }
+                      {interviewsessions.filter((s) => s.scores > 80).length}
                     </div>
                     <div className="text-sm text-gray-400">High Scores</div>
                   </div>

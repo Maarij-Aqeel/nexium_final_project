@@ -96,7 +96,9 @@ export const insertsessions = async (
 
   const { error: insertError } = await client
     .from("interview_sessions")
-    .insert(insertPayload);
+    .upsert(insertPayload, {
+      onConflict: "interview_id,student_id",
+    });
 
   if (insertError) {
     console.error("Error inserting session data: " + insertError.message);
@@ -111,14 +113,14 @@ export const getsessions = async (userid: string) => {
     .from("interview_sessions")
     .select(
       `
-      *,interviews(id,title,difficulty,duration)
+      *,interviews(id,title,difficulty,duration,created_at)
   `
     )
     .eq("student_id", userid);
 
   if (error) {
     console.log("Error getting user interviews ", error.message);
-    return null;
+    throw error;
   }
   return data;
 };

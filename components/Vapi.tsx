@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Pulse from "./CirclePulse";
 import Vapi from "@vapi-ai/web";
+import { useRouter } from "next/navigation";
 
 export default function VapiClient({
   stopCall,
@@ -27,6 +28,8 @@ export default function VapiClient({
   assignedBy: string | null;
   setTranscript: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
+  const router = useRouter();
+  const hasSentReminder = useRef(false);
   const vapiRef = useRef<Vapi | null>(null);
 
   useEffect(() => {
@@ -36,12 +39,11 @@ export default function VapiClient({
     const vapi = new Vapi(apiKey);
     vapiRef.current = vapi;
 
-    const handleError = (message: any) => {
-      setError(true);
-    };
-    const handleMessage = (message: any) => {
-      console.log("📥 VAPI message received:", message); // Add this
+    // vapi.on("error", (message) => {
+    //   setError(true);
+    // });
 
+    vapi.on("message", (message) => {
       if (message.transcript) {
         setTranscript((prev) => {
           const updated = [...prev];
@@ -53,10 +55,15 @@ export default function VapiClient({
           return updated;
         });
       }
-    };
+    });
 
-    vapi.on("error", handleError);
-    vapi.on("message", handleMessage);
+    vapi.on("call-end", () => {
+      if (!stopCall) {
+        setTimeout(() => {
+          router.push(`/results?p=${interviewId}&q=${userId}`);
+        }, 2000);
+      }
+    });
 
     // AssistantOverrides with dynamic vars
     const assistantOverrides = {
@@ -79,19 +86,31 @@ export default function VapiClient({
     })();
 
     return () => {
-      vapi.off("error", handleError);
-      vapi.off("message", handleMessage);
       vapi.stop();
     };
   }, [Questions, name]);
 
   // Stop the call
   useEffect(() => {
-    if (timeleft <= 3 || stopCall) {
-      vapiRef.current?.say("Our time's up, goodbye!", true);
+    if (stopCall) {
       vapiRef.current?.stop();
     }
-  }, [stopCall, timeleft]);
+  }, [stopCall]);
+
+  useEffect(() => {
+    if (timeleft > 30 || hasSentReminder.current) return;
+    if (vapiRef.current) {
+      vapiRef.current.send({
+        type: "add-message",
+        message: {
+          role: "system",
+          content:
+            "Only 30 seconds left. Please begin wrapping up the interview or ask a final short question.",
+        },
+      });
+      hasSentReminder.current = true;
+    }
+  }, [timeleft]);
 
   return <Pulse />;
 }

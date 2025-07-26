@@ -25,6 +25,7 @@ export type Interview = {
   difficulty: string;
   duration: number;
   created_by: string;
+  created_at:any
 };
 
 

@@ -24,7 +24,12 @@ export const itemVariants = {
   },
 };
 
+// animations.ts
 export const cardHover = {
-  scale: 1.02,
-  transition: { duration: 0.2 },
+  scale: 1.03,
+  transition: {
+    type: "spring" as const,
+    stiffness: 300,
+    damping: 20,
+  },
 };

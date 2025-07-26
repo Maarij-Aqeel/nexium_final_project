@@ -72,7 +72,7 @@ export default function ConfigureInterview({
   }
 
   return (
-    <TextFade direction="up" className="z-50 relative">
+    <TextFade direction="up" className="z-50 relative h-auto">
       {/* Close Button */}
       <button
         className="absolute p-2  top-1 left-auto right-0 transition-all rounded-2xl bg-black/30 backdrop-blur-lg animate-in fade-in duration-300 text-gray-400 text-2xl"
@@ -121,16 +121,16 @@ export default function ConfigureInterview({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="z-[9999]">
-                    <SelectItem value="2">3 Minutes</SelectItem>
-                    <SelectItem value="5">5 Minutes</SelectItem>
-                    <SelectItem value="7">7 Minutes</SelectItem>
+                    <SelectItem value="2" className="hover:bg-white/10">3 Minutes</SelectItem>
+                    <SelectItem value="5" className="hover:bg-white/10">5 Minutes</SelectItem>
+                    <SelectItem value="7" className="hover:bg-white/10">7 Minutes</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
-
+      <div className="py-5"></div>
           {/* Difficulty Level */}
           <FormField
             control={form.control}

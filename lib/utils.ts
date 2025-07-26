@@ -37,3 +37,46 @@ export function dashboard_data(interview_sessions: any[]) {
     avg_score: Math.round(avg_score * 100) / 100,
   };
 }
+
+// Get Colors
+
+export const getStatusVariant = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "completed":
+      return "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm shadow-emerald-500/10";
+    case "pending":
+      return "bg-orange-500/20 text-orange-300 border border-orange-500/30 shadow-sm shadow-orange-500/10";
+    default:
+      return "bg-gray-500/20 text-gray-300 border border-gray-500/30";
+  }
+};
+
+export const getScoreColor = (score: number) => {
+  if (score >= 90) return "text-emerald-400";
+  if (score >= 60) return "text-yellow-400";
+  if (score > 0) return "text-red-400";
+  return "text-gray-400";
+};
+
+export const getDifficultyColor = (difficulty: string) => {
+  switch (difficulty) {
+    case "Professional":
+      return "text-red-400 bg-red-500/10 border border-red-500/20 shadow-sm shadow-red-500/10";
+    case "Intermediate":
+      return "text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 shadow-sm shadow-yellow-500/10";
+    case "Beginner":
+      return "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 shadow-sm shadow-emerald-500/10";
+    default:
+      return "text-gray-400 bg-gray-500/10 border border-gray-500/20";
+  }
+};
+
+export const scoreMessage = (score: number) => {
+  return score >= 85
+    ? "Outstanding performance!"
+    : score >= 70
+    ? "Great job, room for polish!"
+    : score >= 50
+    ? "Decent start, keep practicing!"
+    : "Needs improvement — don't give up!";
+};

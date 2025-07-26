@@ -15,7 +15,7 @@ Your task is to:
 
 ### Provide:
 - An overall numerical score between 0 and 100.
-- A concise and specific feedback message summarizing strengths and areas needing improvement.
+- A concise and specific feedback message summarizing strengths and areas needing improvement in **bullet points**.
 
 # Output Format
 Return strictly a **valid JSON object** with the following structure:
@@ -24,8 +24,8 @@ Return strictly a **valid JSON object** with the following structure:
 {
   "score": <integer between 0 and 100>,
   "feedback": {
-    "strengths": "<short, meaningful summary of what was done well>",
-    "needed_improvements": "<clear, constructive summary of what needs improvement>"
+    "strengths": "<short, meaningful bullet points summary of what was done well>",
+    "needed_improvements": "<clear, constructive bullet points summary of what needs improvement>"
   }
 }
 
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       data?.message?.call.assistantOverrides?.variableValues?.assignedBy;
     const startedAt = data?.message?.startedAt;
     const completedAt = data?.message?.endedAt;
-    const questionArray = [];
+    const questionArray: { question: any; answer: any }[] = [];
 
     if (!interviewId || !userId) {
       return NextResponse.json(

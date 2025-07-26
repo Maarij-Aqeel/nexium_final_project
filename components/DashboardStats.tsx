@@ -5,7 +5,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import clsx from "clsx";
-import { generateStats } from "@/lib/constants/dashboard_helper";
+import { generateStats, getGradient } from "@/lib/constants/dashboard_helper";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { dashboard_data } from "@/lib/utils";
@@ -39,16 +39,9 @@ export function DashboardStats({
         <motion.div
           key={stat.title}
           whileHover={cardHover}
-          className="group cursor-pointer"
         >
-          <Card
-            className={clsx(
-              "h-40 p-6 rounded-2xl shadow-xl backdrop-blur-md bg-gradient-to-tr border border-white/10 relative overflow-hidden",
-              stat.gradientFrom,
-              stat.gradientTo
-            )}
-          >
-            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <Card className={getGradient(stat.gradientKey)}>
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-40 group-hover:opacity-100 transition-opacity duration-300" />
             <CardHeader className="relative z-10">
               <div className="flex items-center justify-between mb-4">
                 <stat.icon className="w-8 h-8 text-white/80" />
@@ -60,7 +53,6 @@ export function DashboardStats({
                     delay: index * 0.2,
                   }}
                 >
-                  <ChevronRight className="w-5 h-5 text-white/60 group-hover:text-white transition-colors" />
                 </motion.div>
               </div>
               <CardTitle className="text-sm text-white/80 font-medium mb-1">

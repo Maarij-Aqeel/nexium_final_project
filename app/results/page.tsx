@@ -9,10 +9,18 @@ import {
 } from "@/components/ui/card";
 import Loading from "@/components/Loading";
 import useSWR from "swr";
+import {
+  getStatusVariant,
+  getDifficultyColor,
+  getScoreColor,
+  scoreMessage,
+} from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import CircularProgress from "@/components/Radix_score";
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { getsession } from "@/lib/db/Handleinterview";
+import { isUUID } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -27,57 +35,10 @@ import {
   MessageSquare,
   HelpCircle,
   TrendingUp,
-  AlertCircle,
   ArrowLeft,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import Error from "@/components/Error";
-
-const getDifficultyColor = (difficulty: string) => {
-  switch (difficulty) {
-    case "Professional":
-      return "text-red-400 bg-red-500/10 border border-red-500/20 shadow-sm shadow-red-500/10";
-    case "Intermediate":
-      return "text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 shadow-sm shadow-yellow-500/10";
-    case "Beginner":
-      return "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 shadow-sm shadow-emerald-500/10";
-    default:
-      return "text-gray-400 bg-gray-500/10 border border-gray-500/20";
-  }
-};
-
-const scoreMessage = (score: number) => {
-  return score >= 85
-    ? "Outstanding performance!"
-    : score >= 70
-    ? "Great job, room for polish!"
-    : score >= 50
-    ? "Decent start, keep practicing!"
-    : "Needs improvement — don't give up!";
-};
-
-const getStatusColor = (status: string) => {
-  switch (status.toLowerCase()) {
-    case "completed":
-      return "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm shadow-emerald-500/10";
-    case "in progress":
-      return "bg-blue-500/20 text-blue-300 border border-blue-500/30 shadow-sm shadow-blue-500/10";
-    case "scheduled":
-      return "bg-orange-500/20 text-orange-300 border border-orange-500/30 shadow-sm shadow-orange-500/10";
-    default:
-      return "bg-gray-500/20 text-gray-300 border border-gray-500/30";
-  }
-};
-
-const getScoreColor = (score: number) => {
-  return score >= 85
-    ? "text-emerald-400"
-    : score >= 70
-    ? "text-blue-400"
-    : score >= 50
-    ? "text-yellow-400"
-    : "text-red-400";
-};
 
 export default function SingleInterview() {
   const searchParams = useSearchParams();
@@ -85,6 +46,19 @@ export default function SingleInterview() {
   const student_id = searchParams.get("q") || "";
   const [session_data, setSessionData] = useState<any>(null);
   const [questions, setQuestions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  // Validate UUID
+  useEffect(() => {
+    if (!interview_id || !student_id) return
+    if (!isUUID(interview_id) || !isUUID(student_id)) router.push("/");
+  }, [student_id, interview_id]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const { data, error, isLoading } = useSWR(
     interview_id && student_id ? [`session`, interview_id, student_id] : null,
@@ -98,7 +72,6 @@ export default function SingleInterview() {
 
   useEffect(() => {
     if (data && Array.isArray(data) && data.length > 0 && data[0]) {
-      console.log("Output in useeffect is ", data);
       setSessionData(data[0]);
       setQuestions(JSON.parse(data[0].questions));
     }
@@ -108,7 +81,7 @@ export default function SingleInterview() {
     return <Error msg="Unable to get interview results" />;
   }
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return <Loading msg1="Getting your interview results..." />;
   }
 
@@ -138,7 +111,7 @@ export default function SingleInterview() {
                       {session_data.interviews.difficulty}
                     </Badge>
                     <Badge
-                      className={`${getStatusColor(
+                      className={`${getStatusVariant(
                         session_data.status
                       )} text-lg font-medium px-4 py-2 rounded-full transition-all duration-200 hover:scale-105`}
                     >
@@ -271,7 +244,14 @@ export default function SingleInterview() {
                               </CardTitle>
                             </div>
                             <CardDescription className="text-gray-200 text-base leading-relaxed">
-                              {session_data.feedback.strengths}
+                              <ul className="list-disc pl-5 space-y-1 marker:text-emerald-500">
+                                {session_data.feedback.strengths
+                                  .split("*")
+                                  .filter((item: any) => item.trim() !== "")
+                                  .map((item: any, index: number) => (
+                                    <li key={index}>{item.trim()}</li>
+                                  ))}
+                              </ul>
                             </CardDescription>
                           </CardHeader>
                         </Card>
@@ -292,7 +272,14 @@ export default function SingleInterview() {
                               </CardTitle>
                             </div>
                             <CardDescription className="text-gray-200 text-base leading-relaxed">
-                              {session_data.feedback.needed_improvements}
+                              <ul className="list-disc pl-5 space-y-1 marker:text-yellow-500">
+                                {session_data.feedback.needed_improvements
+                                  .split("*")
+                                  .filter((item: any) => item.trim() !== "")
+                                  .map((item: any, index: number) => (
+                                    <li key={index}>{item.trim()}</li>
+                                  ))}
+                              </ul>
                             </CardDescription>
                           </CardHeader>
                         </Card>

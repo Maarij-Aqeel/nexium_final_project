@@ -50,11 +50,13 @@ export const useInterviewTimer = ({
       } else {
         setTimeout(() => {
           router.push(`/results?p=${interviewId}&q=${profile?.id}`);
-        }, 3000);
+        }, 2000);
       }
     }
   }, [stopCall, router, interviewId, profile, onTimeUp]);
 
+
+  
   // Initialize timer when component mounts
   useEffect(() => {
     if (!isInitialized && !stopCall) {
