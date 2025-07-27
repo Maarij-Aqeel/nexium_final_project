@@ -41,8 +41,6 @@ export async function POST(req: Request) {
     const interviewId =
       data.message.call.assistantOverrides.variableValues.interviewId;
     const userId = data.message.call.assistantOverrides.variableValues.userId;
-    const assignedBy =
-      data?.message?.call.assistantOverrides?.variableValues?.assignedBy;
     const startedAt = data?.message?.startedAt;
     const completedAt = data?.message?.endedAt;
     const questionArray: { question: any; answer: any }[] = [];
@@ -78,7 +76,6 @@ export async function POST(req: Request) {
         status: "Completed",
         questions: questionArray,
         feedback: parsed.feedback,
-        assignedBy: assignedBy,
         startedAt: startedAt,
         completedAt: completedAt,
       },

@@ -23,9 +23,10 @@ export default function UserProviderWrapper({
   useEffect(() => {
     const fetchUser = async () => {
       const {
-        data: { user },
-      } = await supabase.auth.getUser();
+        data: { session },
+      } = await supabase.auth.getSession();
 
+      const user=session?.user??null
       setUser(user);
 
       if (user) {

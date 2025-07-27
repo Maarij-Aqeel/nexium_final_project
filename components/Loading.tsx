@@ -2,10 +2,10 @@
 import { motion } from "framer-motion";
 
 export default function Loading({
-  msg1,
+  msg1="",
   msg2 = "",
 }: {
-  msg1: string;
+  msg1?: string;
   msg2?: string;
 }) {
   return (

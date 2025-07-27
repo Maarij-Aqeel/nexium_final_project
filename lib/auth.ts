@@ -63,10 +63,12 @@ export const signout = async () => {
 };
 
 export const SignInwithGoogle = async () => {
+  const redirectTo =
+    process.env.NEXT_PUBLIC_SUPABASE_REDIRECT_URL || `${location.origin}/`;
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${location.origin}/`,
+      redirectTo: redirectTo,
     },
   });
 

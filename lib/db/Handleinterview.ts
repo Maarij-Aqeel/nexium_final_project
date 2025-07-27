@@ -72,14 +72,13 @@ export const insertsessions = async (
     status,
     questions,
     feedback,
-    assignedBy,
     startedAt,
     completedAt,
   } = sessionData;
 
   const client = useAdmin ? await getAdminSupabase() : supabase;
 
-  const insertPayload: any = {
+  const updatePayload: any = {
     interview_id,
     student_id,
     scores,
@@ -90,19 +89,15 @@ export const insertsessions = async (
     completed_at: completedAt,
   };
 
-  if (assignedBy) {
-    insertPayload.assigned_by = assignedBy;
-  }
-
-  const { error: insertError } = await client
+  const { error: updateError } = await client
     .from("interview_sessions")
-    .upsert(insertPayload, {
-      onConflict: "interview_id,student_id",
-    });
+    .update(updatePayload)
+    .eq("interview_id", interview_id);
+    console.log(student_id)
 
-  if (insertError) {
-    console.error("Error inserting session data: " + insertError.message);
-    return { error: insertError.message };
+  if (updateError) {
+    console.error("Error updating session data: " + updateError.message);
+    return { error: updateError.message };
   }
 
   return { message: "Session data insertion successful!" };

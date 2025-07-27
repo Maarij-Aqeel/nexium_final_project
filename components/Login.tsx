@@ -135,7 +135,7 @@ export default function LoginComp({ onSubmit }: { onSubmit: any }) {
           <h1 className="text-center font-bold">or</h1>
           <Button
             type="submit"
-            className="w-80 h-14 px-8 rounded-full text-black font-semibold text-2xl bg-gradient-to-r from-primary to-secondary hover:bg-transparent hover:scale-105 transition-all duration-200 flex items-center justify-center hover:shadow-[0_0_20px_5px_rgba(0,255,255,0.5)]"
+            className="w-80 h-14 px-8 rounded-full text-black font-semibold text-2xl bg-gradient-to-r from-primary to-secondary hover:bg-transparent hover:scale-105 transition-all duration-200 flex items-center justify-center hover:shadow-[0_0_20px_3px_rgba(0,255,255,0.5)]"
             disabled={!allFilled}
           >
             Login

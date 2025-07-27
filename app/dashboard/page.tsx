@@ -44,10 +44,22 @@ import Loading from "@/components/Loading";
 import Error from "@/components/Error";
 
 export default function Dashboard() {
-  const { profile } = useUser();
+  const { user,profile } = useUser();
   const [interviewsessions, setAllSessions] = useState<InterviewSession[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [authcheck,SetAuthCheck]=useState(true)
   const router = useRouter();
+
+useEffect(()=>{
+  if (user===undefined)return
+  if (!user)
+  {
+    router.push("/login")
+  }
+  else{
+    SetAuthCheck(false)
+  }
+},[user,router])
 
   const handleInterviewClick = (interview: InterviewSession) => {
     if (interview.status.toLocaleLowerCase() != "pending") {
@@ -83,7 +95,7 @@ export default function Dashboard() {
   if (error) {
     return <Error msg="Unable to get User data." />;
   }
-  if (isLoading) {
+  if (isLoading||authcheck) {
     return <Loading msg1="Loading your Dashboard..." />;
   }
 

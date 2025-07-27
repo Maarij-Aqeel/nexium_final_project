@@ -1,7 +1,7 @@
 import { Card } from "./ui/card";
 import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
-import { Award, ChevronRight } from "lucide-react";
+import { Award } from "lucide-react";
 import { InterviewSession } from "@/types/allTypes";
 import { generateAchievements } from "@/lib/handleAchievements";
 import { useEffect, useState } from "react";

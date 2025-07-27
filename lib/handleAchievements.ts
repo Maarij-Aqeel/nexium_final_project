@@ -12,11 +12,14 @@ export function generateAchievements(
   // Parse and preprocess
   const now = new Date();
   const scores = interviews.map((i) => i.scores);
-  const durations = interviews.map(
-    (i) =>
-      (new Date(i.completed_at).getTime() - new Date(i.started_at).getTime()) /
-      60000
-  );
+  const durations = interviews.map((i) => {
+    const start = new Date(i.started_at + "Z");
+    const end = new Date(i.completed_at);
+    const duration = (end.getTime() - start.getTime()) / 60000;
+
+    if (isNaN(duration) || duration < 0 || duration > 180) return 0;
+    return duration;
+  });
 
   // --- 1. Perfect Score Achiever ---
   if (scores.some((score) => score === 100)) {

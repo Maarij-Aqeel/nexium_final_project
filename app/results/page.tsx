@@ -56,7 +56,7 @@ export default function SingleInterview() {
   }, [student_id, interview_id]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 3000);
+    const timer = setTimeout(() => setLoading(false), 6000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -246,7 +246,7 @@ export default function SingleInterview() {
                             <CardDescription className="text-gray-200 text-base leading-relaxed">
                               <ul className="list-disc pl-5 space-y-1 marker:text-emerald-500">
                                 {session_data.feedback.strengths
-                                  .split("*")
+                                  .split("-")
                                   .filter((item: any) => item.trim() !== "")
                                   .map((item: any, index: number) => (
                                     <li key={index}>{item.trim()}</li>
@@ -274,7 +274,7 @@ export default function SingleInterview() {
                             <CardDescription className="text-gray-200 text-base leading-relaxed">
                               <ul className="list-disc pl-5 space-y-1 marker:text-yellow-500">
                                 {session_data.feedback.needed_improvements
-                                  .split("*")
+                                  .split("-")
                                   .filter((item: any) => item.trim() !== "")
                                   .map((item: any, index: number) => (
                                     <li key={index}>{item.trim()}</li>
