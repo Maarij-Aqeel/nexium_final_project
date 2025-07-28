@@ -49,6 +49,7 @@ export function useInterviewLogic({
   useEffect(() => {
     if (!interviewFound && interview === null) {
       toast.error("Invalid Interview Id. Redirecting...");
+      setError(true)
       router.push("/");
     }
   }, [interviewFound, interview, router]);

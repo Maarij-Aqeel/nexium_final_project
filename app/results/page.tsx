@@ -51,7 +51,7 @@ export default function SingleInterview() {
 
   // Validate UUID
   useEffect(() => {
-    if (!interview_id || !student_id) return
+    if (!interview_id || !student_id) return;
     if (!isUUID(interview_id) || !isUUID(student_id)) router.push("/");
   }, [student_id, interview_id]);
 
@@ -61,7 +61,9 @@ export default function SingleInterview() {
   }, []);
 
   const { data, error, isLoading } = useSWR(
-    interview_id && student_id ? [`session`, interview_id, student_id] : null,
+    !loading && interview_id && student_id
+      ? [`session`, interview_id, student_id]
+      : null,
     () => getsession(interview_id, student_id),
     {
       revalidateOnFocus: false,
