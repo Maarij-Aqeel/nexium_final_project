@@ -11,57 +11,98 @@ export default function Home() {
 
   return (
     <FadeWrapper>
-      <div className="relative flex flex-col items-center justify-center min-h-screen text-center px-4 overflow-hidden  bg-gradient-to-br from-background via-background to-primary/5">
-        {/* Animated Glow Orbs */}
-        <div className="absolute top-20 left-10 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute top-40 right-20 w-52 h-52 bg-green-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-30 left-1/4 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-2000" />
-        <div className="absolute top-1/3 right-1/4 w-32 h-52 bg-cyan-500/20 rounded-full blur-3xl animate-pulse delay-2000" />
+      {/* Background mesh + animated grain */}
+      <div className="fixed inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#00D9FF]/8 via-transparent to-transparent" />
+      <div className="fixed inset-0 -z-10 opacity-[.015] animate-grain bg-[url('/images/grain.svg')]" />
 
-        {/* Hero Section */}
-        <section className="z-10 flex flex-col items-center justify-center w-full min-h-screen pt-10 px-6 bg-primary/5">
-          <h1 className="text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            AI-Powered
+      {/* Parallax blob layer */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-cyan-400/30 rounded-full blur-[120px] animate-float-reverse" />
+        <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-green-400/30 rounded-full blur-[120px] animate-float" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60rem] h-[60rem] bg-gradient-conic from-cyan-400/10 via-transparent to-green-400/10 blur-3xl" />
+      </div>
+
+      {/* 3️⃣  Hero Section */}
+      <section className="relative isolate flex flex-col items-center justify-center min-h-screen px-6 pt-24 pb-16 text-center sm:pt-32">
+        <div className="max-w-4xl">
+          <h1 className="text-[clamp(3rem,10vw,7rem)] font-black tracking-tighter leading-none">
+            <span className="inline-block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-gradient">
+              Intervue AI
+            </span>
           </h1>
-          <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
-            Interview Platform
-          </h2>
-          <p className="text-xl md:text-2xl max-w-2xl text-muted-foreground">
-            Experience the future of technical interviews with our voice-based
-            AI interviewer. Get real-time feedback and improve your skills.
+
+          <p className="mt-6 text-xl md:text-2xl text-white/80 max-w-2xl mx-auto leading-snug">
+            Your smart voice-based interviewer. Real-time feedback, zero stress,
+            infinite growth.
           </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center gap-8 sm:gap-10 mt-10">
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-8">
             <Button
-              className="px-8 py-7 text-black font-semibold text-lg rounded-full bg-gradient-to-r from-primary to-secondary hover:scale-105 hover:shadow-[0_0_25px_3px_rgba(0,255,255,0.6)] transition-all duration-300"
               onClick={() => router.push("/interviews")}
+              className="px-8 py-6 group relative overflow-hidden rounded-full bg-gradient-to-r from-primary to-secondary text-black font-semibold text-lg shadow-[0_0_20px_#00D9FF60] hover:shadow-[0_0_35px_#00D9FF90] transition-all duration-300 hover:scale-105"
             >
-              Start Interviewing
+              <span className="absolute inset-0 w-full h-full bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 " />
+              <span className="relative z-10">Start Interview</span>
             </Button>
-            <Button className="bg-transparent rounded-full px-8 py-7 text-primary font-semibold text-lg border border-primary transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:bg-primary/15">
+            <Button className="bg-transparent rounded-full px-8 py-6 text-primary font-semibold text-lg border border-primary transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:bg-primary/15">
               Learn More
             </Button>
           </div>
-        </section>
+        </div>
 
-        {/* Why Choose Us */}
-        <section className="z-10 w-full max-w-7xl mt-16 px-6 ">
-          <h2 className="text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
-            Why Choose Us?
+        {/* subtle scroll hint */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/40 animate-bounce">
+          <svg
+            width="24"
+            height="40"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M12 8v16M8 20l4 4 4-4" />
+          </svg>
+        </div>
+      </section>
+
+      {/*Why Choose Us */}
+      <section className="relative z-10 max-w-7xl mx-auto px-6 py-32">
+        <div className="absolute top-28 left-1/4 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-2000" />
+        <header className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+            Why choose <span className="text-primary">Intervue</span>?
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Revolutionary AI technology meets intuitive design for the ultimate
-            interview experience.
+          <p className="mt-4 max-w-xl mx-auto text-lg text-white/60">
+            AI that listens, adapts and guides you to your dream role.
           </p>
-          <Cards />
-        </section>
+        </header>
+        <Cards />
+      </section>
 
-        {/* Use Cases */}
-        <section className="z-10 w-full mt-12 px-6">
-          <UseCases />
-        </section>
-      </div>
+      {/* Use Cases */}
+      <section className="relative  max-w-7xl mx-auto px-6 pb-32">
+        <div className="absolute top-10 right-20 w-32 h-32 bg-green-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        <header className="text-center mb-10">
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+            Who Is This For?
+          </h2>
+        </header>
+        <UseCases />
+      </section>
+
+      {/* Bottom CTA strip */}
+      <section className="relative z-10 bg-gradient-to-r from-[#00D9FF]/10 via-transparent to-[#00FF94]/10 py-20">
+        <div className="max-w-3xl mx-auto text-center">
+          <h3 className="text-3xl font-bold text-white">
+            Ready to ace your next interview?
+          </h3>
+          <Button
+            onClick={() => router.push("/interviews")}
+            className="px-6 py-6 mt-6 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white font-semibold text-lg hover:bg-white/20 transition"
+          >
+            Get Started — It’s Free
+          </Button>
+        </div>
+      </section>
     </FadeWrapper>
   );
 }

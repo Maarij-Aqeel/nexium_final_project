@@ -59,18 +59,18 @@ export default function SignupComp({ onSubmit }: { onSubmit: any }) {
   return (
     <div className="w-full max-w-lg shadow-2xl border border-white/20 bg-background/70 backdrop-blur-md rounded-3xl overflow-hidden">
       {/* Header */}
-      <div className="flex flex-row items-center gap-6 pb-8 px-8 pt-8">
+      <div className="flex flex-row items-center gap-2 pb-8 px-8 pt-8">
         <div className="relative">
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/30 to-secondary/30 blur-sm" />
-          <img
-            src="https://img.icons8.com/?size=100&id=HRqoDlVZAD8t&format=png&color=000000"
+          <div className="absolute inset-0 rounded-full  blur-sm" />
+           <img
+            src="/images/logo.png"
             alt="Logo"
-            className="relative h-14 w-14 rounded-full flex-shrink-0 mb-4 border-2 border-white/10 bg-white/5 backdrop-blur-sm p-1"
+            className="relative h-28 w-28  flex-shrink-0 mb-2 "
           />
         </div>
         <div className="flex flex-col">
           <h1 className="text-4xl font-bold text-primary bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            AI Interviewer
+            Intervue AI
           </h1>
           <p className="text-xl font-semibold text-muted-foreground mt-2">
             Practice job interviews with AI

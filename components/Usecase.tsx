@@ -34,15 +34,13 @@ const useCases = [
 
 export default function UseCases() {
   return (
-    <section className="py-20 px-6">
-      <h2 className="text-4xl md:text-5xl bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text font-bold text-center mb-12">
-        Who Is This For?
-      </h2>
+    <section className="py-20 px-6 bg-transparent">
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto">
         {useCases.map((useCase, index) => (
           <Card
             key={index}
-            className="p-6 hover:scale-[1.03] hover:border-primary h-full hover:shadow-2xl transition-all duration-300 ease-out rounded-2xl border-primary/20"
+            className="p-6 hover:scale-[1.03] z-10 hover:border-primary h-full hover:shadow-2xl transition-all duration-300 ease-out rounded-2xl border-primary/20"
           >
             <CardHeader className="flex flex-col items-center gap-4 text-center">
               <div className="bg-primary/60 p-4 rounded-full">
@@ -58,6 +56,8 @@ export default function UseCases() {
               </CardDescription>
             </CardHeader>
           </Card>
+
+          
         ))}
       </div>
     </section>

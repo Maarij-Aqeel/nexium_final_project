@@ -7,6 +7,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import ConfigureInterview from "./ConfigureInterview";
+import GlowTrail from "./GlowTrail";
 import { useState } from "react";
 import Interviews from "@/lib/constants/Interviews";
 import { TextFade } from "./FadeUp";
@@ -17,10 +18,13 @@ export default function InterviewCards() {
   const GetColor = (tag: string) => {
     const classname = `inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-semibold  backdrop-blur-sm  `;
     return tag.toLowerCase() === "trending"
-      ? classname + "text-red-400 bg-red-500/20 border border-red-500/30 shadow-sm shadow-red-500/10"
+      ? classname +
+          "text-red-400 bg-red-500/20 border border-red-500/30 shadow-sm shadow-red-500/10"
       : tag.toLowerCase() === "beginner"
-      ? classname + "bg-emerald-500/20  text-emerald-300 shadow-sm shadow-emerald-500/10  border-emerald-500/30"
-      : classname + "bg-blue-500/20 text-blue-300 border border-blue-500/30 shadow-sm shadow-blue-500/10";
+      ? classname +
+        "bg-emerald-500/20  text-emerald-300 shadow-sm shadow-emerald-500/10  border-emerald-500/30"
+      : classname +
+        "bg-blue-500/20 text-blue-300 border border-blue-500/30 shadow-sm shadow-blue-500/10";
   };
 
   return (
@@ -57,7 +61,6 @@ export default function InterviewCards() {
                     alt={interview.title}
                     className="w-16 h-16 rounded-xl "
                   />
-                  
                 </div>
 
                 {/* hover arrow with animation */}
@@ -86,17 +89,19 @@ export default function InterviewCards() {
         ))}
       </TextFade>
 
-      {/* Enhanced Modal Overlay */}
-      {selectedInterview && (
-        <div className="transition-all duration-200 fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
-          <div className=" relative bg-gradient-to-r from-[#090c13] to-[#111827] border border-primary p-8 rounded-xl h-auto w-full sm:w-4/6 md:w-2/4 lg:w-2/6 max-w-2xl shadow-2xl ">
-            <ConfigureInterview
-              interview={selectedInterview}
-              controlstate={setSelectedInterview}
-            />
-          </div>
-        </div>
-      )}
+    {selectedInterview && (
+  <div className="transition-all duration-200 fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
+    <GlowTrail className="w-full sm:w-4/6 md:w-2/4 lg:w-2/6 max-w-2xl" rounded="rounded-3xl">
+      <div className="relative w-full bg-gradient-to-r from-[#090c13]/95 to-[#111827]/95 p-8 rounded-3xl shadow-2xl">
+        <ConfigureInterview
+          interview={selectedInterview}
+          controlstate={setSelectedInterview}
+        />
+      </div>
+    </GlowTrail>
+  </div>
+)}
+
     </>
   );
 }
