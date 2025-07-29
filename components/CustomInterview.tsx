@@ -1,6 +1,4 @@
-// components/CreateInterviewForm.tsx  (drop-in replacement)
 "use client";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { useForm, Controller } from "react-hook-form";
@@ -63,7 +61,7 @@ export default function CreateInterview({ controlstate }: {  controlstate: (val:
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="
-          relative flex flex-col gap-5 p-6 w-80
+          relative flex flex-col gap-5 p-6 w-96
           bg-gradient-to-r from-[#090c13]/95 to-[#111827]/95 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl
         "
       >
@@ -77,7 +75,7 @@ export default function CreateInterview({ controlstate }: {  controlstate: (val:
         </button>
 
         {/* Title */}
-        <h2 className="text-xl font-bold text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+        <h2 className="text-2xl mb-4 font-bold text-center text-white">
           New Interview
         </h2>
 
@@ -103,7 +101,7 @@ export default function CreateInterview({ controlstate }: {  controlstate: (val:
                 <SelectContent
                   position="popper"
                   sideOffset={4}
-                  className="bg-gray-800/90 backdrop-blur border-white/20 rounded-md"
+                  className=" backdrop-blur-lg border-white/20 rounded-md"
                 >
                   <SelectItem value="3" className="hover:bg-white/10">3 min</SelectItem>
                   <SelectItem value="5" className="hover:bg-white/10">5 min</SelectItem>
@@ -127,7 +125,7 @@ export default function CreateInterview({ controlstate }: {  controlstate: (val:
                 <SelectContent
                   position="popper"
                   sideOffset={4}
-                  className="bg-gray-800/90 backdrop-blur border-white/20 rounded-md"
+                  className=" backdrop-blur-lg border-white/20 rounded-md"
                 >
                   <SelectItem value="Beginner" className="hover:bg-white/10">Beginner</SelectItem>
                   <SelectItem value="Intermediate" className="hover:bg-white/10">Intermediate</SelectItem>

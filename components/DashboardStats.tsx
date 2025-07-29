@@ -41,7 +41,7 @@ export function DashboardStats({
           whileHover={cardHover}
         >
           <Card className={getGradient(stat.gradientKey)}>
-            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-40 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900/30 via-slate-800/20 to-slate-700/30  group-hover:bg-white/20 transition-opacity duration-300" />
             <CardHeader className="relative z-10">
               <div className="flex items-center justify-between mb-4">
                 <stat.icon className="w-8 h-8 text-white/80" />

@@ -16,6 +16,7 @@ import {
   scoreMessage,
 } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 import CircularProgress from "@/components/Radix_score";
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -246,14 +247,21 @@ export default function SingleInterview() {
                               </CardTitle>
                             </div>
                             <CardDescription className="text-gray-200 text-base leading-relaxed">
-                              <ul className="list-disc pl-5 space-y-1 marker:text-emerald-500">
-                                {session_data.feedback.strengths
-                                  .split("-")
-                                  .filter((item: any) => item.trim() !== "")
-                                  .map((item: any, index: number) => (
-                                    <li key={index}>{item.trim()}</li>
-                                  ))}
-                              </ul>
+                              <ReactMarkdown
+                                components={{
+                                  ul: ({ node, ...props }) => (
+                                    <ul
+                                      className="list-disc pl-5 space-y-1 marker:text-emerald-500"
+                                      {...props}
+                                    />
+                                  ),
+                                  li: ({ node, ...props }) => (
+                                    <li className="text-sm" {...props} />
+                                  ),
+                                }}
+                              >
+                                {session_data.feedback.strengths}
+                              </ReactMarkdown>
                             </CardDescription>
                           </CardHeader>
                         </Card>
@@ -274,14 +282,21 @@ export default function SingleInterview() {
                               </CardTitle>
                             </div>
                             <CardDescription className="text-gray-200 text-base leading-relaxed">
-                              <ul className="list-disc pl-5 space-y-1 marker:text-yellow-500">
-                                {session_data.feedback.needed_improvements
-                                  .split("-")
-                                  .filter((item: any) => item.trim() !== "")
-                                  .map((item: any, index: number) => (
-                                    <li key={index}>{item.trim()}</li>
-                                  ))}
-                              </ul>
+                              <ReactMarkdown
+                                components={{
+                                  ul: ({ node, ...props }) => (
+                                    <ul
+                                      className="list-disc pl-5 space-y-1 marker:text-yellow-500"
+                                      {...props}
+                                    />
+                                  ),
+                                  li: ({ node, ...props }) => (
+                                    <li className="text-sm" {...props} />
+                                  ),
+                                }}
+                              >
+                                {session_data.feedback.needed_improvements}
+                              </ReactMarkdown>
                             </CardDescription>
                           </CardHeader>
                         </Card>

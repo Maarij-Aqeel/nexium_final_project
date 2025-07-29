@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase/client";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   let next = searchParams.get("next") ?? "/";
 
@@ -19,7 +19,9 @@ export async function GET(request: Request) {
 
       if (userError || !userData?.user) {
         console.error("Failed to fetch user:", userError?.message);
-        return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+        return NextResponse.redirect(
+          `${process.env.NEXT_PUBLIC_SITE_URL}/auth/auth-code-error`
+        );
       }
 
       const user = userData.user;
@@ -43,18 +45,12 @@ export async function GET(request: Request) {
         }
       }
 
-      const forwardedHost = request.headers.get("x-forwarded-host");
-      const isLocalEnv = process.env.NODE_ENV === "development";
-
-      const redirectUrl = isLocalEnv
-        ? `${origin}${next}`
-        : forwardedHost
-        ? `https://${forwardedHost}${next}`
-        : `${origin}${next}`;
-
-      return NextResponse.redirect(redirectUrl);
+      const baseUrl =
+        process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      return NextResponse.redirect(`${baseUrl}${next}`);
     }
   }
 
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  return NextResponse.redirect(`${baseUrl}/auth/auth-code-error`);
 }

@@ -36,7 +36,8 @@ export default function InterviewCards() {
       <TextFade direction="up">
         <div className="flex justify-end mr-6 mb-6">
           <Button
-            className="bg-white/10 rounded-2xl hover:scale-105 hover:bg-white/20 border border-white/30 px-5 py-5 backdrop-blur font-semibold text-white text-lg transition-all duration-200"
+            variant={"outline"}
+            className="bg-white/5 rounded-2xl hover:scale-105 hover:bg-white/30 border border-white/30 px-5 py-5 backdrop-blur font-semibold text-white text-lg transition-all duration-200"
             onClick={() => setCustomInterview(true)}
           >
             Custom Interview
@@ -104,7 +105,7 @@ export default function InterviewCards() {
 
 
       {customInterview&&(
-        <div className="fixed inset-0 items-center justify-center backdrop-blur-md flex">
+        <div className="fixed inset-0 items-center transition-all duration-200 justify-center backdrop-blur-md flex bg-black/60 px-4">
 
           <CustomInterview controlstate={setCustomInterview}/>
         </div>

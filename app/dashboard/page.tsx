@@ -65,7 +65,7 @@ useEffect(()=>{
     if (interview.status.toLocaleLowerCase() != "pending") {
       router.push(`/results/?p=${interview.interviews.id}&q=${profile?.id}`);
     } else {
-      router.push(`interviews/${interview.interviews.id}`);
+      router.push(`/interviews/${interview.interviews.id}`);
     }
   };
 

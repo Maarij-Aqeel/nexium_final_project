@@ -41,7 +41,8 @@ export function dashboard_data(interview_sessions: any[]) {
 // Get Colors
 
 export const getStatusVariant = (status: string) => {
-  switch (status.toLowerCase()) {
+
+  switch (status.trim().toLowerCase()) {
     case "completed":
       return "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm shadow-emerald-500/10";
     case "pending":
