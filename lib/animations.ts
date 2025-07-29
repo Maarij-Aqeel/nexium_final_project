@@ -1,5 +1,5 @@
 // lib/animations.ts
-import { easeOut } from "framer-motion";
+import { easeOut, easeInOut } from "framer-motion";
 
 export const containerVariants = {
   hidden: { opacity: 0 },
@@ -13,7 +13,7 @@ export const containerVariants = {
 };
 
 export const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
@@ -31,5 +31,18 @@ export const cardHover = {
     type: "spring" as const,
     stiffness: 300,
     damping: 20,
+  },
+};
+
+export const heroVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 1.2,
+      ease: easeInOut,
+      staggerChildren: 0.2,
+    },
   },
 };

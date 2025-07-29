@@ -29,7 +29,11 @@ const formSchema = z.object({
 });
 type FormSchema = z.infer<typeof formSchema>;
 
-export default function CreateInterview({ controlstate }: {  controlstate: (val: null) => void; }) {
+export default function CreateInterview({
+  controlstate,
+}: {
+  controlstate: (val: null) => void;
+}) {
   const router = useRouter();
   const { user } = useUser();
   const {
@@ -39,7 +43,12 @@ export default function CreateInterview({ controlstate }: {  controlstate: (val:
     formState: { errors },
   } = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues: { title: "", duration: "5", difficulty: "Intermediate", description: "" },
+    defaultValues: {
+      title: "",
+      duration: "5",
+      difficulty: "Intermediate",
+      description: "",
+    },
   });
 
   const onSubmit = (values: FormSchema) => {
@@ -68,7 +77,7 @@ export default function CreateInterview({ controlstate }: {  controlstate: (val:
         {/* Close pill */}
         <button
           type="button"
-          onClick={()=>controlstate(null)}
+          onClick={() => controlstate(null)}
           className="absolute top-3 right-3 p-1.5 rounded-full text-white/60 hover:text-red-400 transition"
         >
           ✕
@@ -94,18 +103,28 @@ export default function CreateInterview({ controlstate }: {  controlstate: (val:
             name="duration"
             control={control}
             render={({ field }) => (
-              <Select {...field}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                value={field.value}
+              >
                 <SelectTrigger className="h-9 bg-white/5 border-white/10 rounded-md">
-                  <SelectValue />
+                  <SelectValue placeholder="Select duration" />
                 </SelectTrigger>
                 <SelectContent
                   position="popper"
                   sideOffset={4}
-                  className=" backdrop-blur-lg border-white/20 rounded-md"
+                  className="backdrop-blur-lg border-white/20 rounded-md"
                 >
-                  <SelectItem value="3" className="hover:bg-white/10">3 min</SelectItem>
-                  <SelectItem value="5" className="hover:bg-white/10">5 min</SelectItem>
-                  <SelectItem value="7" className="hover:bg-white/10">7 min</SelectItem>
+                  <SelectItem value="3" className="hover:bg-white/10">
+                    3 min
+                  </SelectItem>
+                  <SelectItem value="5" className="hover:bg-white/10">
+                    5 min
+                  </SelectItem>
+                  <SelectItem value="7" className="hover:bg-white/10">
+                    7 min
+                  </SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -118,7 +137,11 @@ export default function CreateInterview({ controlstate }: {  controlstate: (val:
             name="difficulty"
             control={control}
             render={({ field }) => (
-              <Select {...field}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                value={field.value}
+              >
                 <SelectTrigger className="h-9 bg-white/5 border-white/10 rounded-md">
                   <SelectValue />
                 </SelectTrigger>
@@ -127,9 +150,21 @@ export default function CreateInterview({ controlstate }: {  controlstate: (val:
                   sideOffset={4}
                   className=" backdrop-blur-lg border-white/20 rounded-md"
                 >
-                  <SelectItem value="Beginner" className="hover:bg-white/10">Beginner</SelectItem>
-                  <SelectItem value="Intermediate" className="hover:bg-white/10">Intermediate</SelectItem>
-                  <SelectItem value="Professional" className="hover:bg-white/10">Professional</SelectItem>
+                  <SelectItem value="Beginner" className="hover:bg-white/10">
+                    Beginner
+                  </SelectItem>
+                  <SelectItem
+                    value="Intermediate"
+                    className="hover:bg-white/10"
+                  >
+                    Intermediate
+                  </SelectItem>
+                  <SelectItem
+                    value="Professional"
+                    className="hover:bg-white/10"
+                  >
+                    Professional
+                  </SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -149,7 +184,7 @@ export default function CreateInterview({ controlstate }: {  controlstate: (val:
         {/* Submit */}
         <Button
           type="submit"
-          className="w-full h-9 rounded-full bg-gradient-to-r from-primary to-secondary text-black font-semibold hover:shadow-[0_0_20px_3px_rgba(0,255,255,0.5)] transition-all duration-200"
+          className="w-2/3 mx-auto h-9 rounded-full bg-gradient-to-r from-primary to-secondary text-black font-semibold hover:shadow-[0_0_20px_3px_rgba(0,255,255,0.5)] transition-all duration-200"
         >
           Start Interview
         </Button>

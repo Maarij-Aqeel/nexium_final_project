@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import Cards from "@/components/Cards";
 import FadeWrapper from "@/components/FadeWrapper";
 import UseCases from "@/components/Usecase";
+import { itemVariants, heroVariants } from "@/lib/animations";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const router = useRouter();
@@ -22,19 +24,27 @@ export default function Home() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60rem] h-[60rem] bg-gradient-conic from-cyan-400/10 via-transparent to-green-400/10 blur-3xl" />
       </div>
 
-      {/* 3️⃣  Hero Section */}
+      {/*Hero Section */}
       <section className="relative isolate flex flex-col items-center justify-center min-h-screen px-6 pt-24 pb-16 text-center sm:pt-32">
-        <div className="max-w-4xl">
-          <h1 className="text-[clamp(3rem,10vw,7rem)] font-black tracking-tighter leading-none">
+        <motion.div
+          className="max-w-4xl"
+          variants={heroVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.h1
+            variants={itemVariants}
+            className="text-[clamp(3rem,10vw,7rem)] font-black tracking-tighter leading-none"
+          >
             <span className="inline-block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-gradient">
               Intervue AI
             </span>
-          </h1>
+          </motion.h1>
 
-          <p className="mt-6 text-xl md:text-2xl text-white/80 max-w-2xl mx-auto leading-snug">
+          <motion.p className="mt-6 text-xl md:text-2xl text-white/80 max-w-2xl mx-auto leading-snug">
             Your smart voice-based interviewer. Real-time feedback, zero stress,
             infinite growth.
-          </p>
+          </motion.p>
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-8">
             <Button
@@ -48,9 +58,8 @@ export default function Home() {
               Learn More
             </Button>
           </div>
-        </div>
-
-        {/* subtle scroll hint */}
+        </motion.div>
+        {/* scroll hint */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/40 animate-bounce">
           <svg
             width="24"
@@ -67,15 +76,28 @@ export default function Home() {
       {/*Why Choose Us */}
       <section className="relative z-10 max-w-7xl mx-auto px-6 py-32">
         <div className="absolute top-28 left-1/4 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-2000" />
-        <header className="text-center mb-16">
+        <motion.header
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
             Why choose <span className="text-primary">Intervue</span>?
           </h2>
           <p className="mt-4 max-w-xl mx-auto text-lg text-white/60">
             AI that listens, adapts and guides you to your dream role.
           </p>
-        </header>
-        <Cards />
+        </motion.header>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <Cards />
+        </motion.div>
       </section>
 
       {/* Use Cases */}
@@ -86,22 +108,39 @@ export default function Home() {
             Who Is This For?
           </h2>
         </header>
-        <UseCases />
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <UseCases />
+        </motion.div>
       </section>
 
       {/* Bottom CTA strip */}
-      <section className="relative z-10 bg-gradient-to-r from-[#00D9FF]/10 via-transparent to-[#00FF94]/10 py-20">
-        <div className="max-w-3xl mx-auto text-center">
-          <h3 className="text-3xl font-bold text-white">
-            Ready to ace your next interview?
+      <section className="relative z-10 bg-gradient-to-br from-transparent via-transparent to-[#00FF94]/10 py-20">
+        <motion.div
+          className="relative max-w-4xl mx-auto text-center px-6"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 tracking-tight">
+            Ready to ace your <br className="hidden sm:block" />
+            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              next interview
+            </span>
+            ?
           </h3>
           <Button
             onClick={() => router.push("/interviews")}
-            className="px-6 py-6 mt-6 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white font-semibold text-lg hover:bg-white/20 transition"
+            className="px-8 py-6 lg:px-8 lg:py-6 mt-6 rounded-full bg-white/10 backdrop-blur-md border-2 border-white/30 text-white font-semibold text-md lg:text-lg hover:bg-white/20 hover:border-white/50 hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all duration-300 ease-out"
           >
-            Get Started — It’s Free
+            Get Started — It's Free
           </Button>
-        </div>
+        </motion.div>
       </section>
     </FadeWrapper>
   );
