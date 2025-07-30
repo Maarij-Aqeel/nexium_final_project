@@ -59,7 +59,7 @@ export default function SignupComp({ onSubmit }: { onSubmit: any }) {
 
   return (
     <GlowTrail className="w-full max-w-lg" rounded="rounded-3xl">
-      <div className="shadow-2xl border border-white/20 bg-background/70 backdrop-blur-md rounded-3xl overflow-hidden">
+      <div className="shadow-2xl  bg-background/70 backdrop-blur-md rounded-3xl overflow-hidden">
         {/* Header */}
         <div className="flex flex-row items-center gap-2 pb-8 px-8 pt-8">
           <div className="relative">

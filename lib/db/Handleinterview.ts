@@ -93,7 +93,6 @@ export const insertsessions = async (
     .from("interview_sessions")
     .update(updatePayload)
     .eq("interview_id", interview_id);
-    console.log(student_id)
 
   if (updateError) {
     console.error("Error updating session data: " + updateError.message);

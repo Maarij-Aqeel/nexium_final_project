@@ -54,7 +54,7 @@ export default function Home() {
               <span className="absolute inset-0 w-full h-full bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 " />
               <span className="relative z-10">Start Interview</span>
             </Button>
-            <Button className="bg-transparent rounded-full px-8 py-6 text-primary font-semibold text-lg border border-primary transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:bg-primary/15">
+            <Button className="bg-transparent rounded-full px-8 py-6 text-primary font-semibold text-lg border border-primary transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:bg-primary/15" onClick={()=>router.push("/about")}>
               Learn More
             </Button>
           </div>
