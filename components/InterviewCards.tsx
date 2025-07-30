@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card";
 import ConfigureInterview from "./ConfigureInterview";
 import { Button } from "@/components/ui/button";
-import GlowTrail from "./GlowTrail";
 import { useState } from "react";
 import Interviews from "@/lib/constants/Interviews";
 import { TextFade } from "./FadeUp";
@@ -114,9 +113,9 @@ export default function InterviewCards() {
 
       {selectedInterview && (
         <div className="transition-all duration-200 fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
-          <GlowTrail
+          <div
             className="w-full sm:w-4/6 md:w-2/4 lg:w-2/6 max-w-2xl"
-            rounded="rounded-3xl"
+            
           >
             <div className="relative w-full bg-gradient-to-r from-[#090c13]/95 to-[#111827]/95 p-8 rounded-3xl shadow-2xl">
               <ConfigureInterview
@@ -124,7 +123,7 @@ export default function InterviewCards() {
                 controlstate={setSelectedInterview}
               />
             </div>
-          </GlowTrail>
+          </div>
         </div>
       )}
     </>

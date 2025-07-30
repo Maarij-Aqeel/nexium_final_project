@@ -94,9 +94,6 @@ export default function Profile() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-gray-300 cursor-pointer hover:bg-gray-900/70">
-          Dashboard
-        </DropdownMenuItem>
-        <DropdownMenuItem className="text-gray-300 cursor-pointer hover:bg-gray-900/70">
           Settings
         </DropdownMenuItem>
         <DropdownMenuItem

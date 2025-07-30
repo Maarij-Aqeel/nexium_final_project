@@ -47,7 +47,6 @@ export default function SingleInterview() {
   const student_id = searchParams.get("q") || "";
   const [session_data, setSessionData] = useState<any>(null);
   const [questions, setQuestions] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   // Validate UUID
@@ -56,20 +55,14 @@ export default function SingleInterview() {
     if (!isUUID(interview_id) || !isUUID(student_id)) router.push("/");
   }, [student_id, interview_id]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 6000);
-    return () => clearTimeout(timer);
-  }, []);
-
   const { data, error, isLoading } = useSWR(
-    !loading && interview_id && student_id
-      ? [`session`, interview_id, student_id]
-      : null,
+    interview_id && student_id ? [`session`, interview_id, student_id] : null,
     () => getsession(interview_id, student_id),
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       shouldRetryOnError: false,
+      refreshInterval: 2000, // Check after every 2 s
     }
   );
 
@@ -84,7 +77,7 @@ export default function SingleInterview() {
     return <Error msg="Unable to get interview results" />;
   }
 
-  if (isLoading || loading) {
+  if (isLoading || !data || !session_data) {
     return <Loading msg1="Getting your interview results..." />;
   }
 
@@ -260,7 +253,7 @@ export default function SingleInterview() {
                                   ),
                                 }}
                               >
-                                {session_data.feedback.strengths}
+                                {session_data?.feedback?.strengths}
                               </ReactMarkdown>
                             </CardDescription>
                           </CardHeader>
@@ -295,7 +288,7 @@ export default function SingleInterview() {
                                   ),
                                 }}
                               >
-                                {session_data.feedback.needed_improvements}
+                                {session_data?.feedback?.needed_improvements}
                               </ReactMarkdown>
                             </CardDescription>
                           </CardHeader>

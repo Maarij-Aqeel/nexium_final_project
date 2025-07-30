@@ -47,7 +47,7 @@ export const InterviewContent = ({
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.5 }}
-        className="flex items-center justify-start mt-10 ml-8 relative"
+        className="flex items-center justify-start mt-10 ml-10 relative"
       >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
