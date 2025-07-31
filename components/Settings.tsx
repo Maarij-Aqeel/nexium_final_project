@@ -11,23 +11,7 @@ import { toast } from "sonner";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 
-/* ---------- Reusable motion wrapper ---------- */
-
-function MotionWrapper({ children }: { children: ReactNode }) {
-  return (
-    <motion.div
-      key={children?.toString()}
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.2 }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-/* ---------- Section wrapper ---------- */
+/*  Section wrapper  */
 function Section({
   title,
   children,
@@ -45,7 +29,7 @@ function Section({
       <div className="space-y-4">{children}</div>
       <Button
         onClick={onSave}
-        className="rounded-full bg-gradient-to-r from-primary to-secondary text-black font-semibold"
+        className="rounded-full hover:scale-105 transition-all duration-200 bg-gradient-to-r from-primary to-secondary text-black font-semibold"
       >
         Save {title}
       </Button>
@@ -53,7 +37,7 @@ function Section({
   );
 }
 
-/* ---------- Section Components ---------- */
+/*  Section Components  */
 function ProfileSection({
   userdata,
   setUserdata,
@@ -67,6 +51,7 @@ function ProfileSection({
     <Section title="Profile" onSave={onSave}>
       <Field label="Full Name">
         <Input
+          className="bg-white"
           value={userdata.name}
           onChange={(e) =>
             setUserdata((prev: any) => ({ ...prev, name: e.target.value }))
@@ -75,6 +60,7 @@ function ProfileSection({
       </Field>
       <Field label="Email">
         <Input
+          className="bg-white"
           value={userdata.email}
           onChange={(e) =>
             setUserdata((prev: any) => ({ ...prev, email: e.target.value }))
@@ -96,18 +82,6 @@ function SecuritySection({
 }) {
   return (
     <Section title="Security" onSave={onSave}>
-      <Field label="Current Password">
-        <Input
-          type="password"
-          value={userdata.currentPassword || ""}
-          onChange={(e) =>
-            setUserdata((prev: any) => ({
-              ...prev,
-              currentPassword: e.target.value,
-            }))
-          }
-        />
-      </Field>
       <Field label="New Password">
         <Input
           type="password"
@@ -139,9 +113,6 @@ function SecuritySection({
 function PrivacySection() {
   return (
     <Section title="Privacy & Data">
-      <Button variant="outline" className="w-full">
-        Download my data (JSON)
-      </Button>
       <Button variant="destructive" className="w-full">
         Delete all interviews
       </Button>
@@ -155,13 +126,13 @@ function PrivacySection() {
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div>
-      <Label className="text-sm text-white/70">{label}</Label>
+      <Label className="text-sm text-white/70 font-semibold">{label}</Label>
       {children}
     </div>
   );
 }
 
-/* ---------- Main Page ---------- */
+/*  Main Page  */
 export default function SettingsPage({
   open,
   onClose,
@@ -256,28 +227,19 @@ export default function SettingsPage({
     <AnimatePresence>
       {open && (
         <>
-          {/* backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-lg"
-          />
-
           {/* centered panel */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4 top-40"
           >
             <div
               className="
-            w-full max-w-5xl max-h-[90vh]
+            w-full max-w-4xl max-h-[90vh]
             mx-auto my-auto
-            bg-gray-900/70 backdrop-blur-lg border border-white/10
+            bg-surface backdrop-blur-lg border border-white/10
             rounded-lg md:rounded-2xl shadow-2xl
             flex flex-col overflow-hidden
           "
@@ -289,13 +251,12 @@ export default function SettingsPage({
                 </h2>
                 <button
                   onClick={onClose}
-                  className="p-1 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition"
+                  className="p-1 rounded-full text-white/60 hover:text-red-500 hover:bg-black/10 transition"
                 >
                   ✕
                 </button>
               </header>
 
-              {/* scrollable body */}
               <div className="flex-1 grid grid-cols-1 md:grid-cols-12 overflow-y-auto min-h-0">
                 {/* sidebar */}
                 <aside className="md:col-span-3 p-4 border-r border-white/10">

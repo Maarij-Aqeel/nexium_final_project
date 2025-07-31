@@ -84,17 +84,17 @@ export default function SingleInterview() {
   return (
     <div className="min-h-screen p-4 sm:p-6 bg-hero-gradient">
       <div className="max-w-7xl mx-auto">
-        <Card className="bg-gray-900/60 backdrop-blur-md text-white border-gray-700/50 shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-3xl">
+        <Card className="bg-surface/30 backdrop-blur-md text-white border-border shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-3xl">
           {session_data && (
             <>
               {/* Header Section */}
-              <CardHeader className="p-8 border-b border-gray-700/50 bg-gradient-to-r from-gray-800/30 to-gray-900/30">
+              <CardHeader className="p-8 border-b border-border bg-surface/60">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                   <div className="space-y-2">
-                    <CardTitle className="text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent leading-tight">
+                    <CardTitle className="text-4xl font-bold bg-gradient-to-r from-white to-gray-600 bg-clip-text text-transparent leading-tight">
                       {session_data.interviews.title}
                     </CardTitle>
-                    <CardDescription className="text-gray-400 text-lg">
+                    <CardDescription className="text-muted text-lg">
                       Interview Results & Analysis
                     </CardDescription>
                   </div>

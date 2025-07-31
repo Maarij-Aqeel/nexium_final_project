@@ -102,19 +102,15 @@ export default function InterviewCards() {
         </div>
       </TextFade>
 
-
-      {customInterview&&(
+      {customInterview && (
         <div className="fixed inset-0 items-center transition-all duration-200 justify-center backdrop-blur-md flex bg-black/60 px-4">
-
-          <CustomInterview controlstate={setCustomInterview}/>
+          <CustomInterview controlstate={setCustomInterview} />
         </div>
       )}
 
-
       {selectedInterview && (
         <div className="transition-all duration-200 fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
-          <div
-            className="w-full sm:w-4/6 md:w-2/4 lg:w-2/6 max-w-2xl">
+          <div className="w-full sm:w-4/6 md:w-2/4 lg:w-2/6 max-w-2xl">
             <div className="relative w-full bg-gradient-to-r from-[#090c13]/95 to-[#111827]/95 p-8 rounded-3xl shadow-2xl">
               <ConfigureInterview
                 interview={selectedInterview}

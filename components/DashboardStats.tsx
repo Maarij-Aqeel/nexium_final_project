@@ -11,7 +11,6 @@ import { motion } from "framer-motion";
 import { dashboard_data } from "@/lib/utils";
 
 import { cardHover, itemVariants } from "@/lib/animations";
-import { ChevronRight } from "lucide-react";
 import { InterviewSession, DashboardData } from "@/types/allTypes";
 
 export function DashboardStats({

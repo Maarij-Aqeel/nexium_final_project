@@ -44,22 +44,20 @@ import Loading from "@/components/Loading";
 import Error from "@/components/Error";
 
 export default function Dashboard() {
-  const { user,profile } = useUser();
+  const { user, profile } = useUser();
   const [interviewsessions, setAllSessions] = useState<InterviewSession[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [authcheck,SetAuthCheck]=useState(true)
+  const [authcheck, SetAuthCheck] = useState(true);
   const router = useRouter();
 
-useEffect(()=>{
-  if (user===undefined)return
-  if (!user)
-  {
-    router.push("/login")
-  }
-  else{
-    SetAuthCheck(false)
-  }
-},[user,router])
+  useEffect(() => {
+    if (user === undefined) return;
+    if (!user) {
+      router.push("/login");
+    } else {
+      SetAuthCheck(false);
+    }
+  }, [user, router]);
 
   const handleInterviewClick = (interview: InterviewSession) => {
     if (interview.status.toLocaleLowerCase() != "pending") {
@@ -95,7 +93,7 @@ useEffect(()=>{
   if (error) {
     return <Error msg="Unable to get User data." />;
   }
-  if (isLoading||authcheck) {
+  if (isLoading || authcheck) {
     return <Loading msg1="Loading your Dashboard..." />;
   }
 
@@ -110,17 +108,20 @@ useEffect(()=>{
         >
           {/* Header Section */}
           <motion.div variants={itemVariants}>
-            <Card className="bg-gray-900/60 backdrop-blur-md text-white border-gray-700/50 shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-3xl">
-              <CardHeader className="p-8 border-b border-gray-700/50 bg-gradient-to-r from-gray-800/30 to-gray-900/30">
+            <Card className="bg-surface/40 backdrop-blur-md text-white border-border shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-3xl">
+              <CardHeader className="p-8 border-b border-border bg-surface/60">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                   <div className="space-y-3">
                     <CardTitle className="text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent leading-tight flex items-center gap-4">
                       <div className="p-3 rounded-xl bg-primary/20 border border-primary/30">
                         <User className="h-8 w-8 text-primary" />
                       </div>
-                      Welcome back, {profile?.name || "User"}
+                      Welcome back,
+                      <h1 className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
+                        {profile?.name || "User"}
+                      </h1>
                     </CardTitle>
-                    <CardDescription className="text-gray-400 text-lg flex items-center gap-3">
+                    <CardDescription className="text-muted text-lg flex items-center gap-3">
                       <div className="p-2 rounded-lg bg-primary/20">
                         <Calendar className="w-4 h-4 text-primary" />
                       </div>
@@ -146,7 +147,7 @@ useEffect(()=>{
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
             {/* Recent Interviews Table */}
             <motion.div variants={itemVariants} className="xl:col-span-2">
-              <Card className="bg-gray-900/60 backdrop-blur-md text-white border-gray-700/50 shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-3xl">
+              <Card className="bg-surface/70 backdrop-blur-md text-white border-border shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-3xl">
                 <CardHeader className="p-6 border-b border-gray-700/50">
                   <CardTitle className="text-2xl font-semibold flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-primary/20">
@@ -154,7 +155,7 @@ useEffect(()=>{
                     </div>
                     Recent Interviews
                   </CardTitle>
-                  <CardDescription className="text-gray-400">
+                  <CardDescription className="text-muted">
                     Track your interview performance and progress
                   </CardDescription>
                 </CardHeader>
@@ -163,7 +164,7 @@ useEffect(()=>{
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
-                        <TableRow className="border-b border-gray-700/50 hover:bg-transparent">
+                        <TableRow className="border-b border-border hover:bg-surface">
                           <TableHead className="text-white/80 font-semibold p-4">
                             Interview
                           </TableHead>
@@ -193,7 +194,7 @@ useEffect(()=>{
                               animate={{ opacity: 1, x: 0 }}
                               onClick={() => handleInterviewClick(interview)}
                               transition={{ delay: index * 0.05 }}
-                              className="border-b border-gray-700/30 hover:bg-gray-800/40 transition-all duration-200 group cursor-pointer"
+                              className="border-b border-border hover:bg-surface transition-all duration-200 group cursor-pointer"
                               whileHover={{ x: 5 }}
                             >
                               <TableCell className="font-medium text-white group-hover:text-primary transition-colors p-4">
@@ -201,7 +202,7 @@ useEffect(()=>{
                                   <p className="font-semibold">
                                     {interview.interviews.title}
                                   </p>
-                                  <p className="text-xs text-gray-400">
+                                  <p className="text-xs text-muted">
                                     {new Date(
                                       interview.interviews.created_at
                                     ).toLocaleDateString("en-PK", {
@@ -258,7 +259,7 @@ useEffect(()=>{
                   </div>
 
                   {interviewsessions.length > 7 && (
-                    <div className="flex justify-center p-6 border-t border-gray-700/50">
+                    <div className="flex justify-center p-6 border-t border-border">
                       <Button
                         onClick={() => setIsExpanded(!isExpanded)}
                         variant="ghost"
@@ -282,15 +283,15 @@ useEffect(()=>{
 
             {/* Achievements Section */}
             <motion.div variants={itemVariants} className="xl:col-span-1">
-              <Card className="bg-gray-900/60 backdrop-blur-md text-white border-gray-700/50 shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-3xl h-fit">
-                <CardHeader className="p-6 border-b border-gray-700/50">
+              <Card className="bg-surface/70 backdrop-blur-md text-white border-border shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-3xl h-fit">
+                <CardHeader className="p-6 border-b border-border/50">
                   <CardTitle className="text-2xl font-semibold flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-primary/20">
                       <Award className="w-6 h-6 text-primary" />
                     </div>
                     Achievements
                   </CardTitle>
-                  <CardDescription className="text-gray-400">
+                  <CardDescription className="text-muted">
                     Your accomplishments and milestones
                   </CardDescription>
                 </CardHeader>
@@ -303,15 +304,15 @@ useEffect(()=>{
 
           {/* Quick Stats Summary */}
           <motion.div variants={itemVariants}>
-            <Card className="bg-gray-900/60 backdrop-blur-md text-white border-gray-700/50 shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-3xl">
-              <CardHeader className="p-6 border-b border-gray-700/50">
+            <Card className="bg-surface/60 backdrop-blur-md text-white border-border shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-3xl">
+              <CardHeader className="p-6 border-b border-border">
                 <CardTitle className="text-2xl font-semibold flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-primary/20">
                     <TrendingUp className="w-6 h-6 text-primary" />
                   </div>
                   Performance Overview
                 </CardTitle>
-                <CardDescription className="text-gray-400">
+                <CardDescription className="text-muted">
                   Your interview journey at a glance
                 </CardDescription>
               </CardHeader>
@@ -321,9 +322,7 @@ useEffect(()=>{
                     <div className="text-3xl font-bold text-primary">
                       {interviewsessions.length}
                     </div>
-                    <div className="text-sm text-gray-400">
-                      Total Interviews
-                    </div>
+                    <div className="text-sm text-muted">Total Interviews</div>
                   </div>
                   <div className="text-center space-y-2">
                     <div className="text-3xl font-bold text-emerald-400">
@@ -333,7 +332,7 @@ useEffect(()=>{
                         ).length
                       }
                     </div>
-                    <div className="text-sm text-gray-400">Completed</div>
+                    <div className="text-sm text-muted">Completed</div>
                   </div>
                   <div className="text-center space-y-2">
                     <div className="text-3xl font-bold text-yellow-400">
@@ -347,13 +346,13 @@ useEffect(()=>{
                         : 0}
                       %
                     </div>
-                    <div className="text-sm text-gray-400">Average Score</div>
+                    <div className="text-sm text-muted">Average Score</div>
                   </div>
                   <div className="text-center space-y-2">
                     <div className="text-3xl font-bold text-blue-400">
                       {interviewsessions.filter((s) => s.scores > 80).length}
                     </div>
-                    <div className="text-sm text-gray-400">High Scores</div>
+                    <div className="text-sm text-muted">High Scores</div>
                   </div>
                 </div>
               </CardContent>

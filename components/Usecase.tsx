@@ -43,7 +43,7 @@ export default function UseCases() {
             className="p-6 hover:scale-[1.03] z-10 hover:border-primary h-full hover:shadow-2xl transition-all duration-300 ease-out rounded-2xl border-primary/20"
           >
             <CardHeader className="flex flex-col items-center gap-4 text-center">
-              <div className="bg-primary/60 p-4 rounded-full">
+              <div className="bg-gradient-to-br from-primary to-secondary p-4 rounded-full">
                 <img
                   src={useCase.icon}
                   alt={useCase.title}

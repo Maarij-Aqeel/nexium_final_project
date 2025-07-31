@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -112,9 +113,15 @@ export default function Profile() {
       </DropdownMenu>
 
       {settings && (
-        
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-lg"
+          />
           <SettingsPage open={settings} onClose={() => SetSettings(false)} />
-        
+        </>
       )}
     </>
   );
