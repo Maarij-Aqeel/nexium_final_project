@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+#  Intervue AI
 
-## Getting Started
+## What I built (X)
 
-First, run the development server:
+I developed an **AI-powered Interview Practice Platform** where students can simulate technical interviews in real time. The platform provides a realistic interview experience, generates domain-specific questions, offers AI-driven feedback, and helps candidates assess and improve their performance. Additionally, it includes a developing **Company Portal**, enabling organizations to conduct structured interviews with selected candidates.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How I measured success (Y)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+-  Interview simulation completed by users with **automated scoring and personalized feedback**
+-  Support for both **pre-built interviews** and **custom interview generation**
+-  Early testing showed improved **candidate preparation** and **confidence levels**
+-  Backend-ready **Company Profile System** currently in development for recruiters
+-  Smooth integration between frontend, backend, and AI pipelines
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## How I built it (Z)
 
-To learn more about Next.js, take a look at the following resources:
+###  Frontend
+- Built using **Next.js 14** with responsive and dynamic UI
+- Utilized **ShadCN UI** components with **Framer Motion** for smooth transitions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Interview Engine
+- **Vapi** powers the AI interviewer assistant, handling voice interactions and response generation
+- **n8n** dynamically generates domain-specific questions based on selected topics and user preferences
+- Real-time **transcription**, **AI analysis**, and **scoring logic** based on response content
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Features
+- Choose from **pre-built interviews** (e.g. Web Development, Data Science, DevOps)
+- Or generate **custom interviews** by selecting skills or uploading a job description
+- AI provides **verbal and written feedback** with **performance scoring** at the end
+- Interviews can be repeated to track improvement
 
-## Deploy on Vercel
+### Backend
+- **Supabase** handles authentication, user profiles, interview history, and company data
+- Session data, scores, and feedback are stored for future analysis and progress tracking
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### In Development
+- **Company Portal** where companies can:
+  - Create interview flows
+  - Invite students
+  - View performance dashboards
+- Role-based access for students, recruiters, and admins
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Tech Stack
+
+- **Frontend**: Next.js, TailwindCSS, ShadCN UI, Framer Motion  
+- **Backend**: Supabase  
+- **Voice AI**: Vapi  
+- **Workflow Automation**: n8n  
+- **Deployment**: Vercel  
+
+---
+
+## Contribution & Future Plans
+
+I’m actively building out recruiter-side features and preparing for production deployment. Contributions and suggestions are welcome!
+
+---
+
