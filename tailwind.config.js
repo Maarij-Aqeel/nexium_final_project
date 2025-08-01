@@ -1,6 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
+  safelist: [
+    "bg-orange-500/20",
+    "text-orange-300",
+    "border",
+    "border-orange-500/30",
+    "shadow-sm",
+    "shadow-orange-500/10",
+  ],
+
   theme: {
     extend: {
       colors: {
